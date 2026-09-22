@@ -1,0 +1,20 @@
+@page "{id:int}"
+@model AAExamManagementSystem.Pages.Sections.DetailsModel
+@{
+    ViewData["Title"] = "Section Details";
+}
+
+<h1>Section Details</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <dl class="row">
+            <dt class="col-sm-4">Id</dt>
+            <dd class="col-sm-8">@Model.Section.Id</dd>
+            <dt class="col-sm-4">Name</dt>
+            <dd class="col-sm-8">@Model.Section.Name</dd>
+        </dl>
+        <a asp-page="Edit" asp-route-id="@Model.Section.Id" class="btn btn-primary">Edit</a>
+        <a asp-page="Index" class="btn btn-secondary">Back to List</a>
+    </div>
+</div>

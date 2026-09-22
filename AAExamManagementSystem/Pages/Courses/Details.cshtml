@@ -13,6 +13,8 @@
             <dd class="col-sm-8">@Model.Course.Id</dd>
             <dt class="col-sm-4">Name</dt>
             <dd class="col-sm-8">@Model.Course.Name</dd>
+            <dt class="col-sm-4">School Name</dt>
+            <dd class="col-sm-8">@Model.Course.SchoolName</dd>
             <dt class="col-sm-4">Status</dt>
             <dd class="col-sm-8">@await Component.InvokeAsync("StatusPill", new { isActive = Model.Course.IsActive })</dd>
         </dl>

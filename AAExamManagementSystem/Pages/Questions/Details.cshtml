@@ -1,0 +1,41 @@
+@page "{id:int}"
+@model AAExamManagementSystem.Pages.Questions.DetailsModel
+@{
+    ViewData["Title"] = "Question Details";
+}
+
+<h1>Question Details</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <dl class="row">
+            <dt class="col-sm-4">Id</dt>
+            <dd class="col-sm-8">@Model.Question.Id</dd>
+            <dt class="col-sm-4">Exam</dt>
+            <dd class="col-sm-8">@Model.Question.ExamTitle</dd>
+            <dt class="col-sm-4">Question Text</dt>
+            <dd class="col-sm-8">@Model.Question.QuestionText</dd>
+            <dt class="col-sm-4">Question Type</dt>
+            <dd class="col-sm-8">@Model.Question.QuestionType</dd>
+            @if (Model.Question.QuestionType == AAExamManagementSystem.Models.Entities.QuestionType.MultipleChoice)
+            {
+                <dt class="col-sm-4">Option A</dt>
+                <dd class="col-sm-8">@Model.Question.OptionA</dd>
+                <dt class="col-sm-4">Option B</dt>
+                <dd class="col-sm-8">@Model.Question.OptionB</dd>
+                <dt class="col-sm-4">Option C</dt>
+                <dd class="col-sm-8">@Model.Question.OptionC</dd>
+                <dt class="col-sm-4">Option D</dt>
+                <dd class="col-sm-8">@Model.Question.OptionD</dd>
+            }
+            <dt class="col-sm-4">Correct Answer</dt>
+            <dd class="col-sm-8">@Model.Question.CorrectAnswer</dd>
+            <dt class="col-sm-4">Points</dt>
+            <dd class="col-sm-8">@Model.Question.Points</dd>
+            <dt class="col-sm-4">Status</dt>
+            <dd class="col-sm-8">@await Component.InvokeAsync("StatusPill", new { isActive = Model.Question.IsActive })</dd>
+        </dl>
+        <a asp-page="Edit" asp-route-id="@Model.Question.Id" class="btn btn-primary">Edit</a>
+        <a asp-page="Index" class="btn btn-secondary">Back to List</a>
+    </div>
+</div>

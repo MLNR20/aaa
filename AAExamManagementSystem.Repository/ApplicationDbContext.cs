@@ -13,6 +13,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<Department> Departments => Set<Department>();
     public DbSet<Course> Courses => Set<Course>();
     public DbSet<Section> Sections => Set<Section>();
+    public DbSet<Exam> Exams => Set<Exam>();
+    public DbSet<Question> Questions => Set<Question>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -35,5 +37,17 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
             .WithMany(c => c.Users)
             .HasForeignKey(u => u.CourseId)
             .OnDelete(DeleteBehavior.SetNull);
+
+        builder.Entity<Exam>()
+            .HasOne(e => e.Course)
+            .WithMany()
+            .HasForeignKey(e => e.CourseId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<Question>()
+            .HasOne(q => q.Exam)
+            .WithMany()
+            .HasForeignKey(q => q.ExamId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

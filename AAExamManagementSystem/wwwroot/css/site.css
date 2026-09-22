@@ -17,10 +17,6 @@ html {
   min-height: 100%;
 }
 
-body {
-  margin-bottom: 60px;
-}
-
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
   color: var(--bs-secondary-color);
   text-align: end;
@@ -33,6 +29,7 @@ body {
 #sidebar.sidebar {
   width: 240px;
   min-width: 240px;
+  min-height: 100vh;
   overflow: hidden;
   transition: width 0.2s ease, min-width 0.2s ease;
 }
@@ -57,7 +54,19 @@ body {
   margin-right: .5rem;
 }
 
+.sidebar-heading {
+  letter-spacing: .04em;
+  font-size: .75rem;
+}
+
+.table {
+  font-family: 'Manrope', sans-serif;
+}
+
 .table > :not(caption) > * > * {
-  padding-top: .85rem;
-  padding-bottom: .85rem;
+  padding: 1.5rem;
+}
+
+.footer {
+  padding: 1.5rem 0;
 }

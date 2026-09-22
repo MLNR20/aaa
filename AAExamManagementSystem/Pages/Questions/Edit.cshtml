@@ -1,0 +1,72 @@
+@page "{id:int}"
+@model AAExamManagementSystem.Pages.Questions.EditModel
+@using AAExamManagementSystem.Models.Entities
+@{
+    ViewData["Title"] = "Edit Question";
+}
+
+<h1>Edit Question</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="mb-3">
+                <label asp-for="Question.ExamId" class="form-label"></label>
+                <select asp-for="Question.ExamId" class="form-select" asp-items="Model.ExamOptions">
+                    <option value="">-- Select Exam --</option>
+                </select>
+                <span asp-validation-for="Question.ExamId" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Question.QuestionText" class="form-label"></label>
+                <textarea asp-for="Question.QuestionText" class="form-control" rows="2"></textarea>
+                <span asp-validation-for="Question.QuestionText" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Question.QuestionType" class="form-label"></label>
+                <select asp-for="Question.QuestionType" class="form-select" asp-items="Html.GetEnumSelectList<QuestionType>()"></select>
+                <span asp-validation-for="Question.QuestionType" class="text-danger"></span>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Question.OptionA" class="form-label"></label>
+                    <input asp-for="Question.OptionA" class="form-control" />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Question.OptionB" class="form-label"></label>
+                    <input asp-for="Question.OptionB" class="form-control" />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Question.OptionC" class="form-label"></label>
+                    <input asp-for="Question.OptionC" class="form-control" />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Question.OptionD" class="form-label"></label>
+                    <input asp-for="Question.OptionD" class="form-control" />
+                </div>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Question.CorrectAnswer" class="form-label"></label>
+                <input asp-for="Question.CorrectAnswer" class="form-control" />
+                <span asp-validation-for="Question.CorrectAnswer" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Question.Points" class="form-label"></label>
+                <input asp-for="Question.Points" class="form-control" type="number" />
+                <span asp-validation-for="Question.Points" class="text-danger"></span>
+            </div>
+            <div class="form-check form-switch mb-3">
+                <input asp-for="Question.IsActive" class="form-check-input" role="switch" />
+                <label asp-for="Question.IsActive" class="form-check-label"></label>
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+            <a asp-page="Index" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

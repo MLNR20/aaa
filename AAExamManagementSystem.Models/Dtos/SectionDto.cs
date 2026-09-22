@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace AAExamManagementSystem.Models.Dtos;
 
 public class SectionDto
@@ -8,5 +10,6 @@ public class SectionDto
 
 public class SectionCreateUpdateDto
 {
+    [Required, StringLength(100)]
     public string Name { get; set; } = string.Empty;
 }

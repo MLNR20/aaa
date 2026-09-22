@@ -5,14 +5,14 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace AAExamManagementSystem.Pages.Courses;
+namespace AAExamManagementSystem.Pages.Sections;
 
 public class EditModel : PageModel
 {
-    private readonly IGenericRepository<Course> _repository;
+    private readonly IGenericRepository<Section> _repository;
     private readonly IMapper _mapper;
 
-    public EditModel(IGenericRepository<Course> repository, IMapper mapper)
+    public EditModel(IGenericRepository<Section> repository, IMapper mapper)
     {
         _repository = repository;
         _mapper = mapper;
@@ -22,17 +22,17 @@ public class EditModel : PageModel
     public int Id { get; set; }
 
     [BindProperty]
-    public CourseCreateUpdateDto Course { get; set; } = new();
+    public SectionCreateUpdateDto Section { get; set; } = new();
 
     public async Task<IActionResult> OnGetAsync()
     {
-        var course = await _repository.GetByIdAsync(Id);
-        if (course is null)
+        var section = await _repository.GetByIdAsync(Id);
+        if (section is null)
         {
             return NotFound();
         }
 
-        Course = new CourseCreateUpdateDto { Name = course.Name, SchoolName = course.SchoolName, IsActive = course.IsActive };
+        Section = new SectionCreateUpdateDto { Name = section.Name };
         return Page();
     }
 
@@ -43,19 +43,17 @@ public class EditModel : PageModel
             return Page();
         }
 
-        var course = await _repository.GetByIdAsync(Id);
-        if (course is null)
+        var section = await _repository.GetByIdAsync(Id);
+        if (section is null)
         {
             return NotFound();
         }
 
-        course.Name = Course.Name;
-        course.SchoolName = Course.SchoolName;
-        course.IsActive = Course.IsActive;
-        _repository.Update(course);
+        section.Name = Section.Name;
+        _repository.Update(section);
         await _repository.SaveChangesAsync();
 
-        TempData["SuccessMessage"] = $"Course '{course.Name}' updated successfully.";
+        TempData["SuccessMessage"] = $"Section '{section.Name}' updated successfully.";
         return RedirectToPage("Index");
     }
 }

@@ -2,9 +2,9 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "web",
+      "name": "ems-web",
       "runtimeExecutable": "dotnet",
-      "runtimeArgs": ["run", "--project", "AAExamManagementSystem", "--urls", "http://localhost:5240"],
+      "runtimeArgs": ["run", "--project", "AAExamManagementSystem/AAExamManagementSystem.csproj", "--launch-profile", "http"],
       "port": 5240
     }
   ]

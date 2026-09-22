@@ -32,6 +32,11 @@
                         <input asp-for="NewCourse.Name" class="form-control" />
                         <span asp-validation-for="NewCourse.Name" class="text-danger"></span>
                     </div>
+                    <div class="mb-3">
+                        <label asp-for="NewCourse.SchoolName" class="form-label"></label>
+                        <input asp-for="NewCourse.SchoolName" class="form-control" />
+                        <span asp-validation-for="NewCourse.SchoolName" class="text-danger"></span>
+                    </div>
                     <div class="form-check form-switch">
                         <input asp-for="NewCourse.IsActive" class="form-check-input" role="switch" />
                         <label asp-for="NewCourse.IsActive" class="form-check-label"></label>
