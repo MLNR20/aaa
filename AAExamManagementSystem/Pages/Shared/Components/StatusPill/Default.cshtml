@@ -1,0 +1,10 @@
+@model (bool isActive, string activeText, string inactiveText)
+
+@if (Model.isActive)
+{
+    <span class="badge rounded-pill text-bg-success">@Model.activeText</span>
+}
+else
+{
+    <span class="badge rounded-pill text-bg-secondary">@Model.inactiveText</span>
+}

@@ -1,0 +1,104 @@
+@page
+@model AAExamManagementSystem.Pages.Courses.IndexModel
+@{
+    ViewData["Title"] = "Courses";
+}
+
+@await Component.InvokeAsync("EntityTable", new
+{
+    tableId = "coursesTable",
+    basePath = "/Courses",
+    emptyMessage = "No courses found.",
+    items = Model.Courses.Select(c => new EntityTableRow(c.Id.ToString(), c.Name, c.IsActive)),
+    title = "Courses",
+    addButtonText = "New Course",
+    addButtonModalTarget = "#createCourseModal",
+    showStatusColumn = true,
+    confirmDeleteWithSweetAlert = true
+})
+
+<div class="modal fade" id="createCourseModal" tabindex="-1" aria-labelledby="createCourseModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" asp-page-handler="Create">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createCourseModalLabel">New Course</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="mb-3">
+                        <label asp-for="NewCourse.Name" class="form-label"></label>
+                        <input asp-for="NewCourse.Name" class="form-control" />
+                        <span asp-validation-for="NewCourse.Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input asp-for="NewCourse.IsActive" class="form-check-input" role="switch" />
+                        <label asp-for="NewCourse.IsActive" class="form-check-label"></label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap5.min.css" />
+}
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script>
+        $(function () {
+            if ($('#coursesTable').length) {
+                $('#coursesTable').DataTable();
+            }
+            @if (Model.ShowCreateModal)
+            {
+                <text>new bootstrap.Modal(document.getElementById('createCourseModal')).show();</text>
+            }
+
+            @if (TempData["SuccessMessage"] is string successMessage)
+            {
+                <text>
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'success',
+                    title: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(successMessage)),
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true
+                });
+                </text>
+            }
+
+            document.querySelectorAll('.js-sweetalert-delete-form').forEach(function (form) {
+                form.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    var name = form.querySelector('.js-sweetalert-delete').dataset.name;
+                    Swal.fire({
+                        title: 'Delete course?',
+                        text: 'Are you sure you want to delete "' + name + '"? This action cannot be undone.',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Delete',
+                        confirmButtonColor: '#dc3545',
+                        cancelButtonText: 'Cancel'
+                    }).then(function (result) {
+                        if (result.isConfirmed) {
+                            form.submit();
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+}

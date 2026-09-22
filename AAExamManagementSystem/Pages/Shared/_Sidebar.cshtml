@@ -1,0 +1,28 @@
+<nav id="sidebar" class="sidebar flex-shrink-0 bg-light border-end">
+    <div class="sidebar-inner d-flex flex-column h-100 p-3">
+        <a asp-area="" asp-page="/Index" class="d-flex align-items-center mb-3 text-dark text-decoration-none">
+            <span class="fs-5 fw-semibold">EMS Dashboard</span>
+        </a>
+        <hr>
+        <ul class="nav nav-pills flex-column mb-auto">
+            <li class="nav-item">
+                <a asp-area="" asp-page="/Index" class="nav-link text-dark sidebar-link"><i class="bi bi-speedometer2" aria-hidden="true"></i> Dashboard</a>
+            </li>
+            <li class="nav-item">
+                <a asp-area="" asp-page="/Departments/Index" class="nav-link text-dark sidebar-link"><i class="bi bi-building" aria-hidden="true"></i> Departments</a>
+            </li>
+            <li class="nav-item">
+                <a asp-area="" asp-page="/Users/Index" class="nav-link text-dark sidebar-link"><i class="bi bi-people" aria-hidden="true"></i> Users</a>
+            </li>
+            <li class="nav-item">
+                <a asp-area="" asp-page="/Roles/Index" class="nav-link text-dark sidebar-link"><i class="bi bi-person-badge" aria-hidden="true"></i> Roles</a>
+            </li>
+            <li class="nav-item">
+                <a asp-area="" asp-page="/Sections/Index" class="nav-link text-dark sidebar-link"><i class="bi bi-diagram-3" aria-hidden="true"></i> Sections</a>
+            </li>
+            <li class="nav-item">
+                <a asp-area="" asp-page="/Courses/Index" class="nav-link text-dark sidebar-link"><i class="bi bi-journal-bookmark" aria-hidden="true"></i> Courses</a>
+            </li>
+        </ul>
+    </div>
+</nav>

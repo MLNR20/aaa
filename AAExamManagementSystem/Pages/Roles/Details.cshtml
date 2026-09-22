@@ -1,0 +1,22 @@
+@page "{id}"
+@model AAExamManagementSystem.Pages.Roles.DetailsModel
+@{
+    ViewData["Title"] = "Role Details";
+}
+
+<h1>Role Details</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <dl class="row">
+            <dt class="col-sm-4">Id</dt>
+            <dd class="col-sm-8">@Model.Role.Id</dd>
+            <dt class="col-sm-4">Name</dt>
+            <dd class="col-sm-8">@Model.Role.Name</dd>
+            <dt class="col-sm-4">Status</dt>
+            <dd class="col-sm-8">@await Component.InvokeAsync("StatusPill", new { isActive = Model.Role.IsActive })</dd>
+        </dl>
+        <a asp-page="Edit" asp-route-id="@Model.Role.Id" class="btn btn-primary">Edit</a>
+        <a asp-page="Index" class="btn btn-secondary">Back to List</a>
+    </div>
+</div>

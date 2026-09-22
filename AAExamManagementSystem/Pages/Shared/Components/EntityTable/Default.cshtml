@@ -1,0 +1,75 @@
+@model AAExamManagementSystem.ViewComponents.EntityTableViewModel
+
+<div class="card border rounded-2">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">
+            @if (!string.IsNullOrEmpty(Model.Icon))
+            {
+                <i class="bi @Model.Icon" aria-hidden="true"></i>
+            }
+            @Model.Title
+        </h5>
+        @if (!string.IsNullOrEmpty(Model.AddButtonText))
+        {
+            @if (!string.IsNullOrEmpty(Model.AddButtonModalTarget))
+            {
+                <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="@Model.AddButtonModalTarget">@Model.AddButtonText</button>
+            }
+            else if (!string.IsNullOrEmpty(Model.AddButtonHref))
+            {
+                <a href="@Model.AddButtonHref" class="btn btn-sm btn-primary">@Model.AddButtonText</a>
+            }
+        }
+    </div>
+    <div class="card-body">
+        @if (Model.Items.Count == 0)
+        {
+            <p class="text-muted mb-0">@Model.EmptyMessage</p>
+        }
+        else
+        {
+            <table id="@Model.TableId" class="table table-striped table-hover align-middle w-100">
+                <thead>
+                    <tr>
+                        <th class="text-center">Name</th>
+                        @if (Model.ShowStatusColumn)
+                        {
+                            <th class="text-center">Status</th>
+                        }
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Items)
+                    {
+                        <tr>
+                            <td class="text-center">@item.Name</td>
+                            @if (Model.ShowStatusColumn)
+                            {
+                                <td class="text-center">@await Component.InvokeAsync("StatusPill", new { isActive = item.IsActive ?? false })</td>
+                            }
+                            <td class="text-center">
+                                <a href="@Model.BasePath/Details/@item.Id" class="btn btn-sm btn-outline-secondary"><i class="bi bi-eye" aria-hidden="true"></i> Details</a>
+                                <a href="@Model.BasePath/Edit/@item.Id" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil" aria-hidden="true"></i> Edit</a>
+                                @if (Model.ConfirmDeleteWithSweetAlert)
+                                {
+                                    <form method="post" action="@Model.BasePath?handler=Delete" class="d-inline js-sweetalert-delete-form">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@item.Id" />
+                                        <button type="submit" class="btn btn-sm btn-outline-danger js-sweetalert-delete" data-name="@item.Name">
+                                            <i class="bi bi-trash" aria-hidden="true"></i> Delete
+                                        </button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <a href="@Model.BasePath/Delete/@item.Id" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash" aria-hidden="true"></i> Delete</a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>

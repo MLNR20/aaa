@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="AAExamManagementSystem.Models/AAExamManagementSystem.Models.csproj" />
+  <Project Path="AAExamManagementSystem.Repository/AAExamManagementSystem.Repository.csproj" />
+  <Project Path="AAExamManagementSystem.Tests/AAExamManagementSystem.Tests.csproj" />
+  <Project Path="AAExamManagementSystem/AAExamManagementSystem.csproj" />
+</Solution>
