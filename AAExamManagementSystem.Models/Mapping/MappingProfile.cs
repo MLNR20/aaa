@@ -18,7 +18,8 @@ public class MappingProfile : Profile
         CreateMap<SectionCreateUpdateDto, Section>();
 
         CreateMap<Question, QuestionDto>()
-            .ForMember(dest => dest.ExamTitle, opt => opt.Ignore());
+            .ForMember(dest => dest.QuestionTypeName, opt => opt.Ignore())
+            .ForMember(dest => dest.SectionName, opt => opt.Ignore());
         CreateMap<QuestionCreateUpdateDto, Question>();
 
         CreateMap<ApplicationRole, RoleDto>();

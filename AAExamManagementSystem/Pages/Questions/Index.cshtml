@@ -1,6 +1,5 @@
 @page
 @model AAExamManagementSystem.Pages.Questions.IndexModel
-@using AAExamManagementSystem.Models.Entities
 @{
     ViewData["Title"] = "Questions";
 }
@@ -10,7 +9,7 @@
     tableId = "questionsTable",
     basePath = "/Questions",
     emptyMessage = "No questions found.",
-    items = Model.Questions.Select(q => new EntityTableRow(q.Id.ToString(), q.QuestionText.Length > 80 ? q.QuestionText.Substring(0, 80) + "…" : q.QuestionText, q.IsActive)),
+    items = Model.Questions.Select(q => new EntityTableRow(q.Id.ToString(), q.QuestionTitle.Length > 80 ? q.QuestionTitle.Substring(0, 80) + "…" : q.QuestionTitle, q.IsActive)),
     title = "Questions",
     addButtonText = "New Question",
     addButtonModalTarget = "#createQuestionModal",
@@ -29,49 +28,37 @@
                 <div class="modal-body">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <div class="mb-3">
-                        <label asp-for="NewQuestion.ExamId" class="form-label"></label>
-                        <select asp-for="NewQuestion.ExamId" class="form-select" asp-items="Model.ExamOptions">
-                            <option value="">-- Select Exam --</option>
+                        <label asp-for="NewQuestion.QuestionTypeId" class="form-label"></label>
+                        <select asp-for="NewQuestion.QuestionTypeId" class="form-select" asp-items="Model.QuestionTypeOptions">
+                            <option value="">-- Select Question Type --</option>
                         </select>
-                        <span asp-validation-for="NewQuestion.ExamId" class="text-danger"></span>
+                        <span asp-validation-for="NewQuestion.QuestionTypeId" class="text-danger"></span>
                     </div>
                     <div class="mb-3">
-                        <label asp-for="NewQuestion.QuestionText" class="form-label"></label>
-                        <textarea asp-for="NewQuestion.QuestionText" class="form-control" rows="2"></textarea>
-                        <span asp-validation-for="NewQuestion.QuestionText" class="text-danger"></span>
+                        <label asp-for="NewQuestion.SectionId" class="form-label"></label>
+                        <select asp-for="NewQuestion.SectionId" class="form-select" asp-items="Model.SectionOptions">
+                            <option value="">-- Select Section --</option>
+                        </select>
+                        <span asp-validation-for="NewQuestion.SectionId" class="text-danger"></span>
                     </div>
                     <div class="mb-3">
-                        <label asp-for="NewQuestion.QuestionType" class="form-label"></label>
-                        <select asp-for="NewQuestion.QuestionType" class="form-select" asp-items="Html.GetEnumSelectList<QuestionType>()"></select>
-                        <span asp-validation-for="NewQuestion.QuestionType" class="text-danger"></span>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label asp-for="NewQuestion.OptionA" class="form-label"></label>
-                            <input asp-for="NewQuestion.OptionA" class="form-control" />
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label asp-for="NewQuestion.OptionB" class="form-label"></label>
-                            <input asp-for="NewQuestion.OptionB" class="form-control" />
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label asp-for="NewQuestion.OptionC" class="form-label"></label>
-                            <input asp-for="NewQuestion.OptionC" class="form-control" />
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label asp-for="NewQuestion.OptionD" class="form-label"></label>
-                            <input asp-for="NewQuestion.OptionD" class="form-control" />
-                        </div>
+                        <label asp-for="NewQuestion.QuestionTitle" class="form-label"></label>
+                        <textarea asp-for="NewQuestion.QuestionTitle" class="form-control" rows="2"></textarea>
+                        <span asp-validation-for="NewQuestion.QuestionTitle" class="text-danger"></span>
                     </div>
                     <div class="mb-3">
-                        <label asp-for="NewQuestion.CorrectAnswer" class="form-label"></label>
-                        <input asp-for="NewQuestion.CorrectAnswer" class="form-control" />
-                        <span asp-validation-for="NewQuestion.CorrectAnswer" class="text-danger"></span>
+                        <label asp-for="NewQuestion.Image" class="form-label"></label>
+                        <input asp-for="NewQuestion.Image" class="form-control" placeholder="Image URL (optional)" />
+                        <span asp-validation-for="NewQuestion.Image" class="text-danger"></span>
                     </div>
                     <div class="mb-3">
-                        <label asp-for="NewQuestion.Points" class="form-label"></label>
-                        <input asp-for="NewQuestion.Points" class="form-control" type="number" />
-                        <span asp-validation-for="NewQuestion.Points" class="text-danger"></span>
+                        <label asp-for="NewQuestion.Score" class="form-label"></label>
+                        <input asp-for="NewQuestion.Score" class="form-control" type="number" />
+                        <span asp-validation-for="NewQuestion.Score" class="text-danger"></span>
+                    </div>
+                    <div class="form-check form-switch mb-3">
+                        <input asp-for="NewQuestion.IsUpToEvaluation" class="form-check-input" role="switch" />
+                        <label asp-for="NewQuestion.IsUpToEvaluation" class="form-check-label"></label>
                     </div>
                     <div class="form-check form-switch">
                         <input asp-for="NewQuestion.IsActive" class="form-check-input" role="switch" />

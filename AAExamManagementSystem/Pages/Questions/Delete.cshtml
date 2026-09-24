@@ -12,13 +12,13 @@
         <dl class="row">
             <dt class="col-sm-4">Id</dt>
             <dd class="col-sm-8">@Model.Question.Id</dd>
-            <dt class="col-sm-4">Exam</dt>
-            <dd class="col-sm-8">@Model.Question.ExamTitle</dd>
-            <dt class="col-sm-4">Question Text</dt>
-            <dd class="col-sm-8">@Model.Question.QuestionText</dd>
+            <dt class="col-sm-4">Section</dt>
+            <dd class="col-sm-8">@Model.Question.SectionName</dd>
+            <dt class="col-sm-4">Question Title</dt>
+            <dd class="col-sm-8">@Model.Question.QuestionTitle</dd>
         </dl>
         <form method="post" class="js-sweetalert-delete-form">
-            <button type="submit" class="btn btn-danger js-sweetalert-delete" data-name="@Model.Question.QuestionText">Delete</button>
+            <button type="submit" class="btn btn-danger js-sweetalert-delete" data-name="@Model.Question.QuestionTitle">Delete</button>
             <a asp-page="Index" class="btn btn-secondary">Cancel</a>
         </form>
     </div>

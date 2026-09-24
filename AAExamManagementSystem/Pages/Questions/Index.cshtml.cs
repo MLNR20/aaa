@@ -11,19 +11,26 @@ namespace AAExamManagementSystem.Pages.Questions;
 public class IndexModel : PageModel
 {
     private readonly IGenericRepository<Question> _repository;
-    private readonly IGenericRepository<Exam> _examRepository;
+    private readonly IGenericRepository<QuestionType> _questionTypeRepository;
+    private readonly IGenericRepository<Section> _sectionRepository;
     private readonly IMapper _mapper;
 
-    public IndexModel(IGenericRepository<Question> repository, IGenericRepository<Exam> examRepository, IMapper mapper)
+    public IndexModel(
+        IGenericRepository<Question> repository,
+        IGenericRepository<QuestionType> questionTypeRepository,
+        IGenericRepository<Section> sectionRepository,
+        IMapper mapper)
     {
         _repository = repository;
-        _examRepository = examRepository;
+        _questionTypeRepository = questionTypeRepository;
+        _sectionRepository = sectionRepository;
         _mapper = mapper;
     }
 
     public IList<QuestionDto> Questions { get; set; } = new List<QuestionDto>();
 
-    public SelectList ExamOptions { get; set; } = new(new List<Exam>(), "Id", "Title");
+    public SelectList QuestionTypeOptions { get; set; } = new(new List<QuestionType>(), "Id", "Name");
+    public SelectList SectionOptions { get; set; } = new(new List<Section>(), "Id", "Name");
 
     [BindProperty]
     public QuestionCreateUpdateDto NewQuestion { get; set; } = new();
@@ -33,7 +40,7 @@ public class IndexModel : PageModel
     public async Task OnGetAsync()
     {
         await LoadQuestionsAsync();
-        await LoadExamOptionsAsync();
+        await LoadOptionsAsync();
     }
 
     public async Task<IActionResult> OnPostCreateAsync()
@@ -41,7 +48,7 @@ public class IndexModel : PageModel
         if (!ModelState.IsValid)
         {
             await LoadQuestionsAsync();
-            await LoadExamOptionsAsync();
+            await LoadOptionsAsync();
             ShowCreateModal = true;
             return Page();
         }
@@ -72,19 +79,24 @@ public class IndexModel : PageModel
     private async Task LoadQuestionsAsync()
     {
         var questions = await _repository.GetAllAsync();
-        var exams = await _examRepository.GetAllAsync();
-        var examTitles = exams.ToDictionary(e => e.Id, e => e.Title);
+        var questionTypes = await _questionTypeRepository.GetAllAsync();
+        var sections = await _sectionRepository.GetAllAsync();
+        var questionTypeNames = questionTypes.ToDictionary(qt => qt.Id, qt => qt.Name);
+        var sectionNames = sections.ToDictionary(s => s.Id, s => s.Name);
 
         Questions = _mapper.Map<IList<QuestionDto>>(questions.OrderByDescending(q => q.Id));
         foreach (var dto in Questions)
         {
-            dto.ExamTitle = examTitles.GetValueOrDefault(dto.ExamId, "—");
+            dto.QuestionTypeName = questionTypeNames.GetValueOrDefault(dto.QuestionTypeId, "—");
+            dto.SectionName = sectionNames.GetValueOrDefault(dto.SectionId, "—");
         }
     }
 
-    private async Task LoadExamOptionsAsync()
+    private async Task LoadOptionsAsync()
     {
-        var exams = await _examRepository.GetAllAsync();
-        ExamOptions = new SelectList(exams.OrderBy(e => e.Title), "Id", "Title");
+        var questionTypes = await _questionTypeRepository.GetAllAsync();
+        var sections = await _sectionRepository.GetAllAsync();
+        QuestionTypeOptions = new SelectList(questionTypes.OrderBy(qt => qt.Name), "Id", "Name");
+        SectionOptions = new SelectList(sections.OrderBy(s => s.Name), "Id", "Name");
     }
 }

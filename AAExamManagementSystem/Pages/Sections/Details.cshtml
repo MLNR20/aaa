@@ -4,17 +4,14 @@
     ViewData["Title"] = "Section Details";
 }
 
-<h1>Section Details</h1>
-
-<div class="row">
-    <div class="col-md-4">
-        <dl class="row">
-            <dt class="col-sm-4">Id</dt>
-            <dd class="col-sm-8">@Model.Section.Id</dd>
-            <dt class="col-sm-4">Name</dt>
-            <dd class="col-sm-8">@Model.Section.Name</dd>
-        </dl>
-        <a asp-page="Edit" asp-route-id="@Model.Section.Id" class="btn btn-primary">Edit</a>
-        <a asp-page="Index" class="btn btn-secondary">Back to List</a>
-    </div>
-</div>
+@await Component.InvokeAsync("DetailsCard", new
+{
+    title = "Section Details",
+    fields = new[]
+    {
+        new DetailsField("Id", Model.Section.Id.ToString()),
+        new DetailsField("Name", Model.Section.Name)
+    },
+    editHref = $"/Sections/Edit/{Model.Section.Id}",
+    backHref = "/Sections"
+})

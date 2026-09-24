@@ -1,13 +1,13 @@
 namespace AAExamManagementSystem.Models.Entities;
 
-public class Section
+public class Choice
 {
     public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
+    public string ChoiceText { get; set; } = string.Empty;
+    public bool IsCorrect { get; set; }
     public DateTime DateCreated { get; set; } = DateTime.UtcNow;
     public DateTime DateUpdated { get; set; } = DateTime.UtcNow;
     public bool IsActive { get; set; } = true;
 
-    public ICollection<ApplicationUser> Users { get; set; } = new List<ApplicationUser>();
-    public ICollection<Question> Questions { get; set; } = new List<Question>();
+    public ICollection<QuestionAndChoice> QuestionAndChoices { get; set; } = new List<QuestionAndChoice>();
 }

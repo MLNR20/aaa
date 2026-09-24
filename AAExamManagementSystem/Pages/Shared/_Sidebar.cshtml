@@ -36,5 +36,12 @@
                 <a asp-area="" asp-page="/Roles/Index" class="nav-link text-dark sidebar-link"><i class="bi bi-person-badge" aria-hidden="true"></i> Roles</a>
             </li>
         </ul>
+
+        <hr>
+        <form method="post" asp-area="" asp-page="/Logout">
+            <button type="submit" class="nav-link text-danger sidebar-link w-100 text-start border-0 bg-transparent px-3 py-2">
+                <i class="bi bi-box-arrow-left" aria-hidden="true"></i> Logout
+            </button>
+        </form>
     </div>
 </nav>

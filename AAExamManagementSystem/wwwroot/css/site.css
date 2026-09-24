@@ -70,3 +70,28 @@ html {
 .footer {
   padding: 1.5rem 0;
 }
+
+.card-header h5,
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dataTables_filter,
+.dataTables_wrapper .dataTables_info,
+.dataTables_wrapper .dataTables_paginate {
+  font-size: 1rem;
+}
+/* Login page */
+.login-card {
+  max-width: 420px;
+  border-radius: 1rem;
+}
+
+.login-logo {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: #1b6ec2;
+  color: #fff;
+  font-size: 1.75rem;
+}

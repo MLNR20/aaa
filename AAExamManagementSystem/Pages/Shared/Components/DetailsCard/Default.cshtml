@@ -1,0 +1,29 @@
+@model AAExamManagementSystem.ViewComponents.DetailsCardViewModel
+
+<div class="card border rounded-2 p-3">
+    <div class="card-header bg-white border-bottom-0 d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">@Model.Title</h5>
+        <div class="d-flex gap-2">
+            <a href="@Model.EditHref" class="btn btn-primary">Edit</a>
+            <a href="@Model.BackHref" class="btn btn-secondary">Back to List</a>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="@Model.ColumnClass">
+                <dl class="row mb-0">
+                    @foreach (var field in Model.Fields)
+                    {
+                        <dt class="col-sm-4">@field.Label</dt>
+                        <dd class="col-sm-8">@field.Value</dd>
+                    }
+                    @if (Model.ShowStatus)
+                    {
+                        <dt class="col-sm-4">Status</dt>
+                        <dd class="col-sm-8">@await Component.InvokeAsync("StatusPill", new { isActive = Model.IsActive })</dd>
+                    }
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>

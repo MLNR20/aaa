@@ -15,6 +15,12 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<Section> Sections => Set<Section>();
     public DbSet<Exam> Exams => Set<Exam>();
     public DbSet<Question> Questions => Set<Question>();
+    public DbSet<QuestionType> QuestionTypes => Set<QuestionType>();
+    public DbSet<Choice> Choices => Set<Choice>();
+    public DbSet<QuestionAndChoice> QuestionAndChoices => Set<QuestionAndChoice>();
+    public DbSet<Applicant> Applicants => Set<Applicant>();
+    public DbSet<Answer> Answers => Set<Answer>();
+    public DbSet<Attempt> Attempts => Set<Attempt>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -45,9 +51,45 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.Entity<Question>()
-            .HasOne(q => q.Exam)
-            .WithMany()
-            .HasForeignKey(q => q.ExamId)
+            .HasOne(q => q.QuestionType)
+            .WithMany(qt => qt.Questions)
+            .HasForeignKey(q => q.QuestionTypeId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<Question>()
+            .HasOne(q => q.Section)
+            .WithMany(s => s.Questions)
+            .HasForeignKey(q => q.SectionId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<QuestionAndChoice>()
+            .HasOne(qc => qc.Question)
+            .WithMany(q => q.QuestionAndChoices)
+            .HasForeignKey(qc => qc.QuestionId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<QuestionAndChoice>()
+            .HasOne(qc => qc.Choice)
+            .WithMany(c => c.QuestionAndChoices)
+            .HasForeignKey(qc => qc.ChoiceId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<Answer>()
+            .HasOne(a => a.Applicant)
+            .WithMany(ap => ap.Answers)
+            .HasForeignKey(a => a.ApplicantId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<Answer>()
+            .HasOne(a => a.Question)
+            .WithMany(q => q.Answers)
+            .HasForeignKey(a => a.QuestionId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<Attempt>()
+            .HasOne(a => a.Applicant)
+            .WithMany(ap => ap.Attempts)
+            .HasForeignKey(a => a.ApplicantId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

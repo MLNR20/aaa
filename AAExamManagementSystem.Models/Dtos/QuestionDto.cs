@@ -1,60 +1,43 @@
 using System.ComponentModel.DataAnnotations;
-using AAExamManagementSystem.Models.Entities;
 
 namespace AAExamManagementSystem.Models.Dtos;
 
 public class QuestionDto
 {
     public int Id { get; set; }
-    public int ExamId { get; set; }
-    public string ExamTitle { get; set; } = string.Empty;
-    public string QuestionText { get; set; } = string.Empty;
-    public QuestionType QuestionType { get; set; }
-    public string? OptionA { get; set; }
-    public string? OptionB { get; set; }
-    public string? OptionC { get; set; }
-    public string? OptionD { get; set; }
-    public string CorrectAnswer { get; set; } = string.Empty;
-    public int Points { get; set; }
+    public int QuestionTypeId { get; set; }
+    public string QuestionTypeName { get; set; } = string.Empty;
+    public int SectionId { get; set; }
+    public string SectionName { get; set; } = string.Empty;
+    public string QuestionTitle { get; set; } = string.Empty;
+    public string? Image { get; set; }
+    public int Score { get; set; }
+    public bool IsUpToEvaluation { get; set; }
     public bool IsActive { get; set; } = true;
 }
 
 public class QuestionCreateUpdateDto
 {
     [Required]
-    [Display(Name = "Exam")]
-    public int ExamId { get; set; }
-
-    [Required, StringLength(1000)]
-    [Display(Name = "Question Text")]
-    public string QuestionText { get; set; } = string.Empty;
+    [Display(Name = "Question Type")]
+    public int QuestionTypeId { get; set; }
 
     [Required]
-    [Display(Name = "Question Type")]
-    public QuestionType QuestionType { get; set; } = QuestionType.MultipleChoice;
+    [Display(Name = "Section")]
+    public int SectionId { get; set; }
 
-    [StringLength(300)]
-    [Display(Name = "Option A")]
-    public string? OptionA { get; set; }
+    [Required, StringLength(1000)]
+    [Display(Name = "Question Title")]
+    public string QuestionTitle { get; set; } = string.Empty;
 
-    [StringLength(300)]
-    [Display(Name = "Option B")]
-    public string? OptionB { get; set; }
-
-    [StringLength(300)]
-    [Display(Name = "Option C")]
-    public string? OptionC { get; set; }
-
-    [StringLength(300)]
-    [Display(Name = "Option D")]
-    public string? OptionD { get; set; }
-
-    [Required, StringLength(300)]
-    [Display(Name = "Correct Answer")]
-    public string CorrectAnswer { get; set; } = string.Empty;
+    [StringLength(500)]
+    public string? Image { get; set; }
 
     [Range(1, 100)]
-    public int Points { get; set; } = 1;
+    public int Score { get; set; } = 1;
+
+    [Display(Name = "Up for Evaluation")]
+    public bool IsUpToEvaluation { get; set; }
 
     [Display(Name = "Active")]
     public bool IsActive { get; set; } = true;

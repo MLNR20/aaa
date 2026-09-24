@@ -13,13 +13,19 @@ namespace AAExamManagementSystem.Controllers;
 public class QuestionsController : ControllerBase
 {
     private readonly IGenericRepository<Question> _repository;
-    private readonly IGenericRepository<Exam> _examRepository;
+    private readonly IGenericRepository<QuestionType> _questionTypeRepository;
+    private readonly IGenericRepository<Section> _sectionRepository;
     private readonly IMapper _mapper;
 
-    public QuestionsController(IGenericRepository<Question> repository, IGenericRepository<Exam> examRepository, IMapper mapper)
+    public QuestionsController(
+        IGenericRepository<Question> repository,
+        IGenericRepository<QuestionType> questionTypeRepository,
+        IGenericRepository<Section> sectionRepository,
+        IMapper mapper)
     {
         _repository = repository;
-        _examRepository = examRepository;
+        _questionTypeRepository = questionTypeRepository;
+        _sectionRepository = sectionRepository;
         _mapper = mapper;
     }
 
@@ -28,7 +34,7 @@ public class QuestionsController : ControllerBase
     {
         var questions = await _repository.GetAllAsync();
         var dtos = _mapper.Map<IList<QuestionDto>>(questions);
-        await PopulateExamTitlesAsync(dtos);
+        await PopulateLookupsAsync(dtos);
         return Ok(dtos);
     }
 
@@ -39,7 +45,7 @@ public class QuestionsController : ControllerBase
         if (question is null) return NotFound();
 
         var dto = _mapper.Map<QuestionDto>(question);
-        await PopulateExamTitlesAsync(new[] { dto });
+        await PopulateLookupsAsync(new[] { dto });
         return Ok(dto);
     }
 
@@ -51,7 +57,7 @@ public class QuestionsController : ControllerBase
         await _repository.SaveChangesAsync();
 
         var result = _mapper.Map<QuestionDto>(question);
-        await PopulateExamTitlesAsync(new[] { result });
+        await PopulateLookupsAsync(new[] { result });
         return CreatedAtAction(nameof(GetById), new { id = question.Id, version = "1.0" }, result);
     }
 
@@ -61,16 +67,14 @@ public class QuestionsController : ControllerBase
         var question = await _repository.GetByIdAsync(id);
         if (question is null) return NotFound();
 
-        question.ExamId = dto.ExamId;
-        question.QuestionText = dto.QuestionText;
-        question.QuestionType = dto.QuestionType;
-        question.OptionA = dto.OptionA;
-        question.OptionB = dto.OptionB;
-        question.OptionC = dto.OptionC;
-        question.OptionD = dto.OptionD;
-        question.CorrectAnswer = dto.CorrectAnswer;
-        question.Points = dto.Points;
+        question.QuestionTypeId = dto.QuestionTypeId;
+        question.SectionId = dto.SectionId;
+        question.QuestionTitle = dto.QuestionTitle;
+        question.Image = dto.Image;
+        question.Score = dto.Score;
+        question.IsUpToEvaluation = dto.IsUpToEvaluation;
         question.IsActive = dto.IsActive;
+        question.DateUpdated = DateTime.UtcNow;
         _repository.Update(question);
         await _repository.SaveChangesAsync();
         return NoContent();
@@ -87,13 +91,16 @@ public class QuestionsController : ControllerBase
         return NoContent();
     }
 
-    private async Task PopulateExamTitlesAsync(IEnumerable<QuestionDto> dtos)
+    private async Task PopulateLookupsAsync(IEnumerable<QuestionDto> dtos)
     {
-        var exams = await _examRepository.GetAllAsync();
-        var examTitles = exams.ToDictionary(e => e.Id, e => e.Title);
+        var questionTypes = await _questionTypeRepository.GetAllAsync();
+        var sections = await _sectionRepository.GetAllAsync();
+        var questionTypeNames = questionTypes.ToDictionary(qt => qt.Id, qt => qt.Name);
+        var sectionNames = sections.ToDictionary(s => s.Id, s => s.Name);
         foreach (var dto in dtos)
         {
-            dto.ExamTitle = examTitles.GetValueOrDefault(dto.ExamId, string.Empty);
+            dto.QuestionTypeName = questionTypeNames.GetValueOrDefault(dto.QuestionTypeId, string.Empty);
+            dto.SectionName = sectionNames.GetValueOrDefault(dto.SectionId, string.Empty);
         }
     }
 }

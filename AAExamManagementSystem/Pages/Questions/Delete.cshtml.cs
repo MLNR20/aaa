@@ -10,13 +10,19 @@ namespace AAExamManagementSystem.Pages.Questions;
 public class DeleteModel : PageModel
 {
     private readonly IGenericRepository<Question> _repository;
-    private readonly IGenericRepository<Exam> _examRepository;
+    private readonly IGenericRepository<QuestionType> _questionTypeRepository;
+    private readonly IGenericRepository<Section> _sectionRepository;
     private readonly IMapper _mapper;
 
-    public DeleteModel(IGenericRepository<Question> repository, IGenericRepository<Exam> examRepository, IMapper mapper)
+    public DeleteModel(
+        IGenericRepository<Question> repository,
+        IGenericRepository<QuestionType> questionTypeRepository,
+        IGenericRepository<Section> sectionRepository,
+        IMapper mapper)
     {
         _repository = repository;
-        _examRepository = examRepository;
+        _questionTypeRepository = questionTypeRepository;
+        _sectionRepository = sectionRepository;
         _mapper = mapper;
     }
 
@@ -31,8 +37,10 @@ public class DeleteModel : PageModel
         }
 
         Question = _mapper.Map<QuestionDto>(question);
-        var exam = await _examRepository.GetByIdAsync(question.ExamId);
-        Question.ExamTitle = exam?.Title ?? "—";
+        var questionType = await _questionTypeRepository.GetByIdAsync(question.QuestionTypeId);
+        var section = await _sectionRepository.GetByIdAsync(question.SectionId);
+        Question.QuestionTypeName = questionType?.Name ?? "—";
+        Question.SectionName = section?.Name ?? "—";
         return Page();
     }
 

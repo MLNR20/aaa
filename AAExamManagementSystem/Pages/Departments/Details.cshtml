@@ -4,19 +4,16 @@
     ViewData["Title"] = "Department Details";
 }
 
-<h1>Department Details</h1>
-
-<div class="row">
-    <div class="col-md-4">
-        <dl class="row">
-            <dt class="col-sm-4">Id</dt>
-            <dd class="col-sm-8">@Model.Department.Id</dd>
-            <dt class="col-sm-4">Name</dt>
-            <dd class="col-sm-8">@Model.Department.Name</dd>
-            <dt class="col-sm-4">Status</dt>
-            <dd class="col-sm-8">@await Component.InvokeAsync("StatusPill", new { isActive = Model.Department.IsActive })</dd>
-        </dl>
-        <a asp-page="Edit" asp-route-id="@Model.Department.Id" class="btn btn-primary">Edit</a>
-        <a asp-page="Index" class="btn btn-secondary">Back to List</a>
-    </div>
-</div>
+@await Component.InvokeAsync("DetailsCard", new
+{
+    title = "Department Details",
+    fields = new[]
+    {
+        new DetailsField("Id", Model.Department.Id.ToString()),
+        new DetailsField("Name", Model.Department.Name)
+    },
+    showStatus = true,
+    isActive = Model.Department.IsActive,
+    editHref = $"/Departments/Edit/{Model.Department.Id}",
+    backHref = "/Departments"
+})

@@ -1,6 +1,5 @@
 @page "{id:int}"
 @model AAExamManagementSystem.Pages.Questions.EditModel
-@using AAExamManagementSystem.Models.Entities
 @{
     ViewData["Title"] = "Edit Question";
 }
@@ -13,49 +12,37 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="mb-3">
-                <label asp-for="Question.ExamId" class="form-label"></label>
-                <select asp-for="Question.ExamId" class="form-select" asp-items="Model.ExamOptions">
-                    <option value="">-- Select Exam --</option>
+                <label asp-for="Question.QuestionTypeId" class="form-label"></label>
+                <select asp-for="Question.QuestionTypeId" class="form-select" asp-items="Model.QuestionTypeOptions">
+                    <option value="">-- Select Question Type --</option>
                 </select>
-                <span asp-validation-for="Question.ExamId" class="text-danger"></span>
+                <span asp-validation-for="Question.QuestionTypeId" class="text-danger"></span>
             </div>
             <div class="mb-3">
-                <label asp-for="Question.QuestionText" class="form-label"></label>
-                <textarea asp-for="Question.QuestionText" class="form-control" rows="2"></textarea>
-                <span asp-validation-for="Question.QuestionText" class="text-danger"></span>
+                <label asp-for="Question.SectionId" class="form-label"></label>
+                <select asp-for="Question.SectionId" class="form-select" asp-items="Model.SectionOptions">
+                    <option value="">-- Select Section --</option>
+                </select>
+                <span asp-validation-for="Question.SectionId" class="text-danger"></span>
             </div>
             <div class="mb-3">
-                <label asp-for="Question.QuestionType" class="form-label"></label>
-                <select asp-for="Question.QuestionType" class="form-select" asp-items="Html.GetEnumSelectList<QuestionType>()"></select>
-                <span asp-validation-for="Question.QuestionType" class="text-danger"></span>
-            </div>
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label asp-for="Question.OptionA" class="form-label"></label>
-                    <input asp-for="Question.OptionA" class="form-control" />
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label asp-for="Question.OptionB" class="form-label"></label>
-                    <input asp-for="Question.OptionB" class="form-control" />
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label asp-for="Question.OptionC" class="form-label"></label>
-                    <input asp-for="Question.OptionC" class="form-control" />
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label asp-for="Question.OptionD" class="form-label"></label>
-                    <input asp-for="Question.OptionD" class="form-control" />
-                </div>
+                <label asp-for="Question.QuestionTitle" class="form-label"></label>
+                <textarea asp-for="Question.QuestionTitle" class="form-control" rows="2"></textarea>
+                <span asp-validation-for="Question.QuestionTitle" class="text-danger"></span>
             </div>
             <div class="mb-3">
-                <label asp-for="Question.CorrectAnswer" class="form-label"></label>
-                <input asp-for="Question.CorrectAnswer" class="form-control" />
-                <span asp-validation-for="Question.CorrectAnswer" class="text-danger"></span>
+                <label asp-for="Question.Image" class="form-label"></label>
+                <input asp-for="Question.Image" class="form-control" placeholder="Image URL (optional)" />
+                <span asp-validation-for="Question.Image" class="text-danger"></span>
             </div>
             <div class="mb-3">
-                <label asp-for="Question.Points" class="form-label"></label>
-                <input asp-for="Question.Points" class="form-control" type="number" />
-                <span asp-validation-for="Question.Points" class="text-danger"></span>
+                <label asp-for="Question.Score" class="form-label"></label>
+                <input asp-for="Question.Score" class="form-control" type="number" />
+                <span asp-validation-for="Question.Score" class="text-danger"></span>
+            </div>
+            <div class="form-check form-switch mb-3">
+                <input asp-for="Question.IsUpToEvaluation" class="form-check-input" role="switch" />
+                <label asp-for="Question.IsUpToEvaluation" class="form-check-label"></label>
             </div>
             <div class="form-check form-switch mb-3">
                 <input asp-for="Question.IsActive" class="form-check-input" role="switch" />

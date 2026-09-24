@@ -11,13 +11,19 @@ namespace AAExamManagementSystem.Pages.Questions;
 public class EditModel : PageModel
 {
     private readonly IGenericRepository<Question> _repository;
-    private readonly IGenericRepository<Exam> _examRepository;
+    private readonly IGenericRepository<QuestionType> _questionTypeRepository;
+    private readonly IGenericRepository<Section> _sectionRepository;
     private readonly IMapper _mapper;
 
-    public EditModel(IGenericRepository<Question> repository, IGenericRepository<Exam> examRepository, IMapper mapper)
+    public EditModel(
+        IGenericRepository<Question> repository,
+        IGenericRepository<QuestionType> questionTypeRepository,
+        IGenericRepository<Section> sectionRepository,
+        IMapper mapper)
     {
         _repository = repository;
-        _examRepository = examRepository;
+        _questionTypeRepository = questionTypeRepository;
+        _sectionRepository = sectionRepository;
         _mapper = mapper;
     }
 
@@ -27,7 +33,8 @@ public class EditModel : PageModel
     [BindProperty]
     public QuestionCreateUpdateDto Question { get; set; } = new();
 
-    public SelectList ExamOptions { get; set; } = new(new List<Exam>(), "Id", "Title");
+    public SelectList QuestionTypeOptions { get; set; } = new(new List<QuestionType>(), "Id", "Name");
+    public SelectList SectionOptions { get; set; } = new(new List<Section>(), "Id", "Name");
 
     public async Task<IActionResult> OnGetAsync()
     {
@@ -39,18 +46,15 @@ public class EditModel : PageModel
 
         Question = new QuestionCreateUpdateDto
         {
-            ExamId = question.ExamId,
-            QuestionText = question.QuestionText,
-            QuestionType = question.QuestionType,
-            OptionA = question.OptionA,
-            OptionB = question.OptionB,
-            OptionC = question.OptionC,
-            OptionD = question.OptionD,
-            CorrectAnswer = question.CorrectAnswer,
-            Points = question.Points,
+            QuestionTypeId = question.QuestionTypeId,
+            SectionId = question.SectionId,
+            QuestionTitle = question.QuestionTitle,
+            Image = question.Image,
+            Score = question.Score,
+            IsUpToEvaluation = question.IsUpToEvaluation,
             IsActive = question.IsActive
         };
-        await LoadExamOptionsAsync();
+        await LoadOptionsAsync();
         return Page();
     }
 
@@ -58,7 +62,7 @@ public class EditModel : PageModel
     {
         if (!ModelState.IsValid)
         {
-            await LoadExamOptionsAsync();
+            await LoadOptionsAsync();
             return Page();
         }
 
@@ -68,16 +72,14 @@ public class EditModel : PageModel
             return NotFound();
         }
 
-        question.ExamId = Question.ExamId;
-        question.QuestionText = Question.QuestionText;
-        question.QuestionType = Question.QuestionType;
-        question.OptionA = Question.OptionA;
-        question.OptionB = Question.OptionB;
-        question.OptionC = Question.OptionC;
-        question.OptionD = Question.OptionD;
-        question.CorrectAnswer = Question.CorrectAnswer;
-        question.Points = Question.Points;
+        question.QuestionTypeId = Question.QuestionTypeId;
+        question.SectionId = Question.SectionId;
+        question.QuestionTitle = Question.QuestionTitle;
+        question.Image = Question.Image;
+        question.Score = Question.Score;
+        question.IsUpToEvaluation = Question.IsUpToEvaluation;
         question.IsActive = Question.IsActive;
+        question.DateUpdated = DateTime.UtcNow;
         _repository.Update(question);
         await _repository.SaveChangesAsync();
 
@@ -85,9 +87,11 @@ public class EditModel : PageModel
         return RedirectToPage("Index");
     }
 
-    private async Task LoadExamOptionsAsync()
+    private async Task LoadOptionsAsync()
     {
-        var exams = await _examRepository.GetAllAsync();
-        ExamOptions = new SelectList(exams.OrderBy(e => e.Title), "Id", "Title");
+        var questionTypes = await _questionTypeRepository.GetAllAsync();
+        var sections = await _sectionRepository.GetAllAsync();
+        QuestionTypeOptions = new SelectList(questionTypes.OrderBy(qt => qt.Name), "Id", "Name");
+        SectionOptions = new SelectList(sections.OrderBy(s => s.Name), "Id", "Name");
     }
 }

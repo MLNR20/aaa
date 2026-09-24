@@ -1,0 +1,6 @@
+@if (TempData["SuccessMessage"] is string successMessage)
+{
+    <script>
+        showSuccessToast(@Html.Raw(System.Text.Json.JsonSerializer.Serialize(successMessage)));
+    </script>
+}

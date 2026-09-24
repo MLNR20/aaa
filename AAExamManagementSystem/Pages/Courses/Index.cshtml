@@ -11,6 +11,7 @@
     emptyMessage = "No courses found.",
     items = Model.Courses.Select(c => new EntityTableRow(c.Id.ToString(), c.Name, c.IsActive)),
     title = "Courses",
+    titleClass = "fw-medium",
     addButtonText = "New Course",
     addButtonModalTarget = "#createCourseModal",
     showStatusColumn = true,
@@ -60,6 +61,8 @@
     <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script src="~/js/sweetalert-toast.js" asp-append-version="true"></script>
+    <partial name="_SuccessToast" />
     <script>
         $(function () {
             if ($('#coursesTable').length) {
@@ -68,21 +71,6 @@
             @if (Model.ShowCreateModal)
             {
                 <text>new bootstrap.Modal(document.getElementById('createCourseModal')).show();</text>
-            }
-
-            @if (TempData["SuccessMessage"] is string successMessage)
-            {
-                <text>
-                Swal.fire({
-                    toast: true,
-                    position: 'top-end',
-                    icon: 'success',
-                    title: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(successMessage)),
-                    showConfirmButton: false,
-                    timer: 3000,
-                    timerProgressBar: true
-                });
-                </text>
             }
 
             document.querySelectorAll('.js-sweetalert-delete-form').forEach(function (form) {
