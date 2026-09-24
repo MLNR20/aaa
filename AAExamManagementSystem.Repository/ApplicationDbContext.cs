@@ -21,6 +21,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<Applicant> Applicants => Set<Applicant>();
     public DbSet<Answer> Answers => Set<Answer>();
     public DbSet<Attempt> Attempts => Set<Attempt>();
+    public DbSet<Notification> Notifications => Set<Notification>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -91,5 +92,18 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
             .WithMany(ap => ap.Attempts)
             .HasForeignKey(a => a.ApplicantId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<Notification>()
+            .HasOne(n => n.ApplicationUser)
+            .WithMany(u => u.Notifications)
+            .HasForeignKey(n => n.ApplicationUserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<Notification>(n =>
+        {
+            n.Property(x => x.Header).HasMaxLength(200).IsRequired();
+            n.Property(x => x.Body).IsRequired();
+            n.HasIndex(x => new { x.ApplicationUserId, x.Status });
+        });
     }
 }

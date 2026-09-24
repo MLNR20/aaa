@@ -29,3 +29,6 @@ x86/
 *.cache
 .DS_Store
 Thumbs.db
+
+# Uploaded applicant resumes
+AAExamManagementSystem/App_Data/

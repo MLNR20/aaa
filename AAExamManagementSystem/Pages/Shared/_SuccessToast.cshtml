@@ -4,3 +4,9 @@
         showSuccessToast(@Html.Raw(System.Text.Json.JsonSerializer.Serialize(successMessage)));
     </script>
 }
+@if (TempData["ErrorMessage"] is string errorMessage)
+{
+    <script>
+        showErrorAlert(@Html.Raw(System.Text.Json.JsonSerializer.Serialize(errorMessage)));
+    </script>
+}

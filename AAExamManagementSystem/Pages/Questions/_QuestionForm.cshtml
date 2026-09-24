@@ -1,0 +1,101 @@
+@model AAExamManagementSystem.Models.Dtos.QuestionCreateUpdateDto
+@*
+    Shared Create/Edit fields. Render with <partial name="_QuestionForm" for="Question" view-data="..." />
+    so inputs keep the "Question." prefix. Expects ViewData: QuestionTypeOptions, SectionOptions, ChoiceTypeIds.
+*@
+@{
+    var choicesName = Html.NameFor(m => m.Choices).ToString();
+    var choiceTypeIds = (IEnumerable<int>)ViewData["ChoiceTypeIds"]!;
+    var questionTypeOptions = (SelectList)ViewData["QuestionTypeOptions"]!;
+    var sectionOptions = (SelectList)ViewData["SectionOptions"]!;
+}
+
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<div class="row">
+    <div class="col-md-6 mb-3">
+        <label asp-for="QuestionTypeId" class="form-label"></label>
+        <select asp-for="QuestionTypeId" class="form-select js-question-type"
+                asp-items="questionTypeOptions"
+                data-choice-type-ids="@string.Join(",", choiceTypeIds)">
+            <option value="">-- Select Question Type --</option>
+        </select>
+        <span asp-validation-for="QuestionTypeId" class="text-danger"></span>
+    </div>
+    <div class="col-md-6 mb-3">
+        <label asp-for="SectionId" class="form-label"></label>
+        <select asp-for="SectionId" class="form-select" asp-items="sectionOptions">
+            <option value="">-- Select Section --</option>
+        </select>
+        <span asp-validation-for="SectionId" class="text-danger"></span>
+    </div>
+</div>
+<div class="mb-3">
+    <label asp-for="QuestionTitle" class="form-label"></label>
+    <textarea asp-for="QuestionTitle" class="form-control" rows="3"></textarea>
+    <span asp-validation-for="QuestionTitle" class="text-danger"></span>
+</div>
+<div class="row">
+    <div class="col-md-8 mb-3">
+        <label asp-for="Image" class="form-label"></label>
+        <input asp-for="Image" class="form-control" placeholder="Image URL (optional)" />
+        <span asp-validation-for="Image" class="text-danger"></span>
+    </div>
+    <div class="col-md-4 mb-3">
+        <label asp-for="Score" class="form-label"></label>
+        <input asp-for="Score" class="form-control" type="number" />
+        <span asp-validation-for="Score" class="text-danger"></span>
+    </div>
+</div>
+
+<div class="card mb-3 js-choices-card">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <span class="fw-semibold">Choices</span>
+        <button type="button" class="btn btn-sm btn-outline-primary js-add-choice">
+            <i class="bi bi-plus-lg" aria-hidden="true"></i> Add choice
+        </button>
+    </div>
+    <div class="card-body">
+        <p class="text-muted small mb-2">Tick the correct answer(s). Blank rows are ignored.</p>
+        <span asp-validation-for="Choices" class="text-danger d-block mb-2"></span>
+        <div class="js-choice-list" data-name="@choicesName">
+            @for (var i = 0; i < Model.Choices.Count; i++)
+            {
+                <div class="input-group mb-2 js-choice-row">
+                    <div class="input-group-text">
+                        <input type="checkbox" class="form-check-input mt-0 js-choice-correct" value="true"
+                               name="@($"{choicesName}[{i}].IsCorrect")" checked="@Model.Choices[i].IsCorrect"
+                               aria-label="Correct answer" title="Correct answer" />
+                        <input type="hidden" class="js-choice-correct-default" value="false" name="@($"{choicesName}[{i}].IsCorrect")" />
+                    </div>
+                    <input type="text" class="form-control js-choice-text" maxlength="500" placeholder="Choice text"
+                           name="@($"{choicesName}[{i}].ChoiceText")" value="@Model.Choices[i].ChoiceText" />
+                    <button type="button" class="btn btn-outline-danger js-remove-choice" aria-label="Remove choice">
+                        <i class="bi bi-x-lg" aria-hidden="true"></i>
+                    </button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="form-check form-switch mb-3">
+    <input asp-for="IsUpToEvaluation" class="form-check-input" role="switch" />
+    <label asp-for="IsUpToEvaluation" class="form-check-label"></label>
+</div>
+<div class="form-check form-switch mb-3">
+    <input asp-for="IsActive" class="form-check-input" role="switch" />
+    <label asp-for="IsActive" class="form-check-label"></label>
+</div>
+
+<template id="choiceRowTemplate">
+    <div class="input-group mb-2 js-choice-row">
+        <div class="input-group-text">
+            <input type="checkbox" class="form-check-input mt-0 js-choice-correct" value="true" aria-label="Correct answer" title="Correct answer" />
+            <input type="hidden" class="js-choice-correct-default" value="false" />
+        </div>
+        <input type="text" class="form-control js-choice-text" maxlength="500" placeholder="Choice text" />
+        <button type="button" class="btn btn-outline-danger js-remove-choice" aria-label="Remove choice">
+            <i class="bi bi-x-lg" aria-hidden="true"></i>
+        </button>
+    </div>
+</template>

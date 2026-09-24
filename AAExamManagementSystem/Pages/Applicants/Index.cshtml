@@ -1,0 +1,70 @@
+@page
+@model AAExamManagementSystem.Pages.Applicants.IndexModel
+@{
+    ViewData["Title"] = "Applicants";
+}
+
+<div class="card border rounded-2 p-3">
+    <div class="card-header bg-white border-bottom-0 d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Applicants</h5>
+        <a asp-page="/Register" class="btn btn-outline-primary" target="_blank" rel="noopener">
+            <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i> Open registration form
+        </a>
+    </div>
+    <div class="card-body">
+        @if (Model.Applicants.Count == 0)
+        {
+            <p class="text-muted mb-0">No applicants have registered yet.</p>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table id="applicantsTable" class="table table-striped table-hover align-middle w-100">
+                    <thead>
+                        <tr>
+                            <th class="text-start">Student No.</th>
+                            <th class="text-start">Name</th>
+                            <th class="text-start">Email</th>
+                            <th class="text-start">First Choice</th>
+                            <th class="text-start">Academic Year</th>
+                            <th class="text-start">Registered</th>
+                            <th class="text-start">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var applicant in Model.Applicants)
+                        {
+                            <tr>
+                                <td class="text-start">@applicant.StudentNo</td>
+                                <td class="text-start">@applicant.FullName</td>
+                                <td class="text-start">@applicant.Email</td>
+                                <td class="text-start">@(applicant.FirstChoice ?? "—")</td>
+                                <td class="text-start">@applicant.AcademicYear</td>
+                                <td class="text-start" data-order="@applicant.DateCreated.ToString("o")">@applicant.DateCreated.ToLocalTime().ToString("MMM d, yyyy")</td>
+                                <td class="text-start">
+                                    <a asp-page="Details" asp-route-id="@applicant.Id" class="btn btn-secondary">Details</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap5.min.css" />
+}
+
+@section Scripts {
+    <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
+    <script>
+        $(function () {
+            if ($('#applicantsTable').length) {
+                $('#applicantsTable').DataTable({ order: [[5, 'desc']] });
+            }
+        });
+    </script>
+}

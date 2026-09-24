@@ -8,7 +8,7 @@
 
 <div class="row">
     <div class="col-md-4">
-        <form method="post">
+        <form method="post" data-confirm-title="Save changes?" data-confirm-text="Save changes to &quot;{name}&quot;?" data-confirm-name-field="Section.Name" data-confirm-button="Save">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="mb-3">
@@ -24,4 +24,5 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <partial name="_SweetAlertScripts" />
 }

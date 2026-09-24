@@ -16,4 +16,6 @@ public class ApplicationUser : IdentityUser
 
     public int? CourseId { get; set; }
     public Course? Course { get; set; }
+
+    public ICollection<Notification> Notifications { get; set; } = new List<Notification>();
 }

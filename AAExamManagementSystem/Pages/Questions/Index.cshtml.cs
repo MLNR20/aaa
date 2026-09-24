@@ -1,102 +1,41 @@
 using AAExamManagementSystem.Models.Dtos;
-using AAExamManagementSystem.Models.Entities;
-using AAExamManagementSystem.Repository;
-using AutoMapper;
+using AAExamManagementSystem.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace AAExamManagementSystem.Pages.Questions;
 
 public class IndexModel : PageModel
 {
-    private readonly IGenericRepository<Question> _repository;
-    private readonly IGenericRepository<QuestionType> _questionTypeRepository;
-    private readonly IGenericRepository<Section> _sectionRepository;
-    private readonly IMapper _mapper;
+    private readonly QuestionService _questionService;
 
-    public IndexModel(
-        IGenericRepository<Question> repository,
-        IGenericRepository<QuestionType> questionTypeRepository,
-        IGenericRepository<Section> sectionRepository,
-        IMapper mapper)
+    public IndexModel(QuestionService questionService)
     {
-        _repository = repository;
-        _questionTypeRepository = questionTypeRepository;
-        _sectionRepository = sectionRepository;
-        _mapper = mapper;
+        _questionService = questionService;
     }
 
     public IList<QuestionDto> Questions { get; set; } = new List<QuestionDto>();
 
-    public SelectList QuestionTypeOptions { get; set; } = new(new List<QuestionType>(), "Id", "Name");
-    public SelectList SectionOptions { get; set; } = new(new List<Section>(), "Id", "Name");
-
-    [BindProperty]
-    public QuestionCreateUpdateDto NewQuestion { get; set; } = new();
-
-    public bool ShowCreateModal { get; set; }
-
     public async Task OnGetAsync()
     {
-        await LoadQuestionsAsync();
-        await LoadOptionsAsync();
-    }
-
-    public async Task<IActionResult> OnPostCreateAsync()
-    {
-        if (!ModelState.IsValid)
-        {
-            await LoadQuestionsAsync();
-            await LoadOptionsAsync();
-            ShowCreateModal = true;
-            return Page();
-        }
-
-        var question = _mapper.Map<Question>(NewQuestion);
-        await _repository.AddAsync(question);
-        await _repository.SaveChangesAsync();
-
-        TempData["SuccessMessage"] = "Question created successfully.";
-        return RedirectToPage("Index");
+        Questions = await _questionService.GetAllAsync();
     }
 
     public async Task<IActionResult> OnPostDeleteAsync(int id)
     {
-        var question = await _repository.GetByIdAsync(id);
-        if (question is null)
+        var (found, error) = await _questionService.DeleteAsync(id);
+        if (!found)
         {
             return NotFound();
         }
 
-        _repository.Remove(question);
-        await _repository.SaveChangesAsync();
+        if (error is not null)
+        {
+            TempData["ErrorMessage"] = error;
+            return RedirectToPage("Index");
+        }
 
         TempData["SuccessMessage"] = "Question deleted successfully.";
         return RedirectToPage("Index");
-    }
-
-    private async Task LoadQuestionsAsync()
-    {
-        var questions = await _repository.GetAllAsync();
-        var questionTypes = await _questionTypeRepository.GetAllAsync();
-        var sections = await _sectionRepository.GetAllAsync();
-        var questionTypeNames = questionTypes.ToDictionary(qt => qt.Id, qt => qt.Name);
-        var sectionNames = sections.ToDictionary(s => s.Id, s => s.Name);
-
-        Questions = _mapper.Map<IList<QuestionDto>>(questions.OrderByDescending(q => q.Id));
-        foreach (var dto in Questions)
-        {
-            dto.QuestionTypeName = questionTypeNames.GetValueOrDefault(dto.QuestionTypeId, "—");
-            dto.SectionName = sectionNames.GetValueOrDefault(dto.SectionId, "—");
-        }
-    }
-
-    private async Task LoadOptionsAsync()
-    {
-        var questionTypes = await _questionTypeRepository.GetAllAsync();
-        var sections = await _sectionRepository.GetAllAsync();
-        QuestionTypeOptions = new SelectList(questionTypes.OrderBy(qt => qt.Name), "Id", "Name");
-        SectionOptions = new SelectList(sections.OrderBy(s => s.Name), "Id", "Name");
     }
 }

@@ -22,6 +22,117 @@ namespace AAExamManagementSystem.Repository.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("AAExamManagementSystem.Models.Entities.Answer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AnswerText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ApplicantId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CheckedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateUpdated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("IsCorrect")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Point")
+                        .HasColumnType("int");
+
+                    b.Property<int>("QuestionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicantId");
+
+                    b.HasIndex("QuestionId");
+
+                    b.ToTable("Answers");
+                });
+
+            modelBuilder.Entity("AAExamManagementSystem.Models.Entities.Applicant", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AcademicYear")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateUpdated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ExpectedGradDate")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstChoice")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsScholar")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Resume")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("School")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SecondChoice")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StudentNo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TermsRemaining")
+                        .HasColumnType("int");
+
+                    b.Property<string>("YearLevel")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Applicants");
+                });
+
             modelBuilder.Entity("AAExamManagementSystem.Models.Entities.ApplicationRole", b =>
                 {
                     b.Property<string>("Id")
@@ -143,6 +254,83 @@ namespace AAExamManagementSystem.Repository.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("AAExamManagementSystem.Models.Entities.Attempt", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AcademicYear")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ApplicantId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DateTaken")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateUpdated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ExamId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Section")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Term")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("TimeRemaining")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("TotalScore")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicantId");
+
+                    b.ToTable("Attempts");
+                });
+
+            modelBuilder.Entity("AAExamManagementSystem.Models.Entities.Choice", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ChoiceText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateUpdated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsCorrect")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Choices");
+                });
+
             modelBuilder.Entity("AAExamManagementSystem.Models.Entities.Course", b =>
                 {
                     b.Property<int>("Id")
@@ -150,6 +338,12 @@ namespace AAExamManagementSystem.Repository.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateUpdated")
+                        .HasColumnType("datetime2");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -175,6 +369,9 @@ namespace AAExamManagementSystem.Repository.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateUpdated")
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("IsActive")
@@ -220,6 +417,46 @@ namespace AAExamManagementSystem.Repository.Migrations
                     b.ToTable("Exams");
                 });
 
+            modelBuilder.Entity("AAExamManagementSystem.Models.Entities.Notification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Body")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateRead")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Header")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId", "Status");
+
+                    b.ToTable("Notifications");
+                });
+
             modelBuilder.Entity("AAExamManagementSystem.Models.Entities.Question", b =>
                 {
                     b.Property<int>("Id")
@@ -228,43 +465,99 @@ namespace AAExamManagementSystem.Repository.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("CorrectAnswer")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
 
-                    b.Property<int>("ExamId")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("DateUpdated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Image")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
-                    b.Property<string>("OptionA")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("IsUpToEvaluation")
+                        .HasColumnType("bit");
 
-                    b.Property<string>("OptionB")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("OptionC")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("OptionD")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Points")
-                        .HasColumnType("int");
-
-                    b.Property<string>("QuestionText")
+                    b.Property<string>("QuestionTitle")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("QuestionType")
+                    b.Property<int>("QuestionTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Score")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SectionId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ExamId");
+                    b.HasIndex("QuestionTypeId");
+
+                    b.HasIndex("SectionId");
 
                     b.ToTable("Questions");
+                });
+
+            modelBuilder.Entity("AAExamManagementSystem.Models.Entities.QuestionAndChoice", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ChoiceId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateUpdated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("QuestionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChoiceId");
+
+                    b.HasIndex("QuestionId");
+
+                    b.ToTable("QuestionAndChoices");
+                });
+
+            modelBuilder.Entity("AAExamManagementSystem.Models.Entities.QuestionType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateUpdated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("QuestionTypes");
                 });
 
             modelBuilder.Entity("AAExamManagementSystem.Models.Entities.Section", b =>
@@ -274,6 +567,15 @@ namespace AAExamManagementSystem.Repository.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateUpdated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -390,6 +692,25 @@ namespace AAExamManagementSystem.Repository.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("AAExamManagementSystem.Models.Entities.Answer", b =>
+                {
+                    b.HasOne("AAExamManagementSystem.Models.Entities.Applicant", "Applicant")
+                        .WithMany("Answers")
+                        .HasForeignKey("ApplicantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("AAExamManagementSystem.Models.Entities.Question", "Question")
+                        .WithMany("Answers")
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Applicant");
+
+                    b.Navigation("Question");
+                });
+
             modelBuilder.Entity("AAExamManagementSystem.Models.Entities.ApplicationUser", b =>
                 {
                     b.HasOne("AAExamManagementSystem.Models.Entities.Course", "Course")
@@ -414,6 +735,17 @@ namespace AAExamManagementSystem.Repository.Migrations
                     b.Navigation("Section");
                 });
 
+            modelBuilder.Entity("AAExamManagementSystem.Models.Entities.Attempt", b =>
+                {
+                    b.HasOne("AAExamManagementSystem.Models.Entities.Applicant", "Applicant")
+                        .WithMany("Attempts")
+                        .HasForeignKey("ApplicantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Applicant");
+                });
+
             modelBuilder.Entity("AAExamManagementSystem.Models.Entities.Exam", b =>
                 {
                     b.HasOne("AAExamManagementSystem.Models.Entities.Course", "Course")
@@ -425,15 +757,53 @@ namespace AAExamManagementSystem.Repository.Migrations
                     b.Navigation("Course");
                 });
 
-            modelBuilder.Entity("AAExamManagementSystem.Models.Entities.Question", b =>
+            modelBuilder.Entity("AAExamManagementSystem.Models.Entities.Notification", b =>
                 {
-                    b.HasOne("AAExamManagementSystem.Models.Entities.Exam", "Exam")
-                        .WithMany()
-                        .HasForeignKey("ExamId")
+                    b.HasOne("AAExamManagementSystem.Models.Entities.ApplicationUser", "ApplicationUser")
+                        .WithMany("Notifications")
+                        .HasForeignKey("ApplicationUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Exam");
+                    b.Navigation("ApplicationUser");
+                });
+
+            modelBuilder.Entity("AAExamManagementSystem.Models.Entities.Question", b =>
+                {
+                    b.HasOne("AAExamManagementSystem.Models.Entities.QuestionType", "QuestionType")
+                        .WithMany("Questions")
+                        .HasForeignKey("QuestionTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("AAExamManagementSystem.Models.Entities.Section", "Section")
+                        .WithMany("Questions")
+                        .HasForeignKey("SectionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("QuestionType");
+
+                    b.Navigation("Section");
+                });
+
+            modelBuilder.Entity("AAExamManagementSystem.Models.Entities.QuestionAndChoice", b =>
+                {
+                    b.HasOne("AAExamManagementSystem.Models.Entities.Choice", "Choice")
+                        .WithMany("QuestionAndChoices")
+                        .HasForeignKey("ChoiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AAExamManagementSystem.Models.Entities.Question", "Question")
+                        .WithMany("QuestionAndChoices")
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Choice");
+
+                    b.Navigation("Question");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -487,6 +857,23 @@ namespace AAExamManagementSystem.Repository.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("AAExamManagementSystem.Models.Entities.Applicant", b =>
+                {
+                    b.Navigation("Answers");
+
+                    b.Navigation("Attempts");
+                });
+
+            modelBuilder.Entity("AAExamManagementSystem.Models.Entities.ApplicationUser", b =>
+                {
+                    b.Navigation("Notifications");
+                });
+
+            modelBuilder.Entity("AAExamManagementSystem.Models.Entities.Choice", b =>
+                {
+                    b.Navigation("QuestionAndChoices");
+                });
+
             modelBuilder.Entity("AAExamManagementSystem.Models.Entities.Course", b =>
                 {
                     b.Navigation("Users");
@@ -497,8 +884,22 @@ namespace AAExamManagementSystem.Repository.Migrations
                     b.Navigation("Users");
                 });
 
+            modelBuilder.Entity("AAExamManagementSystem.Models.Entities.Question", b =>
+                {
+                    b.Navigation("Answers");
+
+                    b.Navigation("QuestionAndChoices");
+                });
+
+            modelBuilder.Entity("AAExamManagementSystem.Models.Entities.QuestionType", b =>
+                {
+                    b.Navigation("Questions");
+                });
+
             modelBuilder.Entity("AAExamManagementSystem.Models.Entities.Section", b =>
                 {
+                    b.Navigation("Questions");
+
                     b.Navigation("Users");
                 });
 #pragma warning restore 612, 618

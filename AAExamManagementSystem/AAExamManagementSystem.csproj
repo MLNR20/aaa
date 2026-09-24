@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <ItemGroup>
     <ProjectReference Include="..\AAExamManagementSystem.Models\AAExamManagementSystem.Models.csproj" />
@@ -22,6 +22,7 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>20600e15-ce2f-4ad8-ba58-dc4fd7ee6953</UserSecretsId>
   </PropertyGroup>
 
 </Project>

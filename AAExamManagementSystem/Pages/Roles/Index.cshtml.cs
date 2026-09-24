@@ -72,9 +72,14 @@ public class IndexModel : PageModel
         }
 
         var result = await _roleManager.DeleteAsync(role);
-        TempData["SuccessMessage"] = result.Succeeded
-            ? $"Role '{role.Name}' deleted successfully."
-            : string.Join(" ", result.Errors.Select(e => e.Description));
+        if (result.Succeeded)
+        {
+            TempData["SuccessMessage"] = $"Role '{role.Name}' deleted successfully.";
+        }
+        else
+        {
+            TempData["ErrorMessage"] = string.Join(" ", result.Errors.Select(e => e.Description));
+        }
 
         return RedirectToPage("Index");
     }

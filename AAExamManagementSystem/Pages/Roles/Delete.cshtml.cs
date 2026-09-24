@@ -43,7 +43,7 @@ public class DeleteModel : PageModel
         var result = await _roleManager.DeleteAsync(role);
         if (!result.Succeeded)
         {
-            TempData["SuccessMessage"] = string.Join(" ", result.Errors.Select(e => e.Description));
+            TempData["ErrorMessage"] = string.Join(" ", result.Errors.Select(e => e.Description));
             return RedirectToPage("Index");
         }
 

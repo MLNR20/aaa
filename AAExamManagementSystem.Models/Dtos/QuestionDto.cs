@@ -14,6 +14,7 @@ public class QuestionDto
     public int Score { get; set; }
     public bool IsUpToEvaluation { get; set; }
     public bool IsActive { get; set; } = true;
+    public IList<ChoiceDto> Choices { get; set; } = new List<ChoiceDto>();
 }
 
 public class QuestionCreateUpdateDto
@@ -41,4 +42,19 @@ public class QuestionCreateUpdateDto
 
     [Display(Name = "Active")]
     public bool IsActive { get; set; } = true;
+
+    // Only used by choice-based question types; blank rows are ignored on save.
+    public IList<ChoiceDto> Choices { get; set; } = new List<ChoiceDto>();
+}
+
+public class ChoiceDto
+{
+    public int Id { get; set; }
+
+    [StringLength(500)]
+    [Display(Name = "Choice")]
+    public string ChoiceText { get; set; } = string.Empty;
+
+    [Display(Name = "Correct")]
+    public bool IsCorrect { get; set; }
 }

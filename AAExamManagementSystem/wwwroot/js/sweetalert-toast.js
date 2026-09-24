@@ -15,5 +15,20 @@
         });
     }
 
+    // Blocking popup for failures the user must acknowledge (e.g. a delete that was refused).
+    function showErrorAlert(message, title) {
+        if (!message || typeof Swal === 'undefined') {
+            return;
+        }
+
+        Swal.fire({
+            icon: 'error',
+            title: title || 'Something went wrong',
+            text: message,
+            confirmButtonColor: '#0d6efd'
+        });
+    }
+
     window.showSuccessToast = showSuccessToast;
+    window.showErrorAlert = showErrorAlert;
 })();

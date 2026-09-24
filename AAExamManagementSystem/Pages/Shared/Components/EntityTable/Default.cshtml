@@ -32,6 +32,10 @@
                 <table id="@Model.TableId" class="table table-striped table-hover align-middle w-100">
                     <thead>
                         <tr>
+                            @if (Model.ShowRowNumberColumn)
+                            {
+                                <th class="text-start">#</th>
+                            }
                             <th class="text-start">Name</th>
                             @if (Model.ShowStatusColumn)
                             {
@@ -41,13 +45,22 @@
                             {
                                 <th class="text-start">Date Created</th>
                             }
+                            @if (Model.ShowDateUpdatedColumn)
+                            {
+                                <th class="text-start">Date Updated</th>
+                            }
                             <th class="text-start">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in Model.Items)
+                        @for (var i = 0; i < Model.Items.Count; i++)
                         {
+                            var item = Model.Items[i];
                             <tr>
+                                @if (Model.ShowRowNumberColumn)
+                                {
+                                    <td class="text-start">@(i + 1)</td>
+                                }
                                 <td class="text-start">@item.Name</td>
                                 @if (Model.ShowStatusColumn)
                                 {
@@ -55,7 +68,11 @@
                                 }
                                 @if (Model.ShowDateCreatedColumn)
                                 {
-                                    <td class="text-start">@(item.DateCreated?.ToString("MMM d, yyyy") ?? "-")</td>
+                                    <td class="text-start" data-order="@item.DateCreated?.ToString("o")">@(item.DateCreated?.ToString("MMM d, yyyy") ?? "-")</td>
+                                }
+                                @if (Model.ShowDateUpdatedColumn)
+                                {
+                                    <td class="text-start" data-order="@item.DateUpdated?.ToString("o")">@(item.DateUpdated?.ToString("MMM d, yyyy") ?? "-")</td>
                                 }
                                 <td class="text-start">
                                     <a href="@Model.BasePath/Details/@item.Id" class="btn btn-secondary">Details</a>

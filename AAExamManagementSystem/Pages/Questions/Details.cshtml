@@ -29,3 +29,26 @@
     backHref = "/Questions",
     columnClass = "col-md-6"
 })
+
+@if (Model.Question.Choices.Count > 0)
+{
+    <div class="row mt-3">
+        <div class="col-md-6">
+            <div class="card border rounded-2">
+                <div class="card-header bg-white fw-semibold">Choices</div>
+                <ul class="list-group list-group-flush">
+                    @foreach (var choice in Model.Question.Choices)
+                    {
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>@choice.ChoiceText</span>
+                            @if (choice.IsCorrect)
+                            {
+                                <span class="badge text-bg-success"><i class="bi bi-check-lg" aria-hidden="true"></i> Correct</span>
+                            }
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+}

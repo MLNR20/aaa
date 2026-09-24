@@ -50,6 +50,7 @@ public class EditModel : PageModel
         }
 
         section.Name = Section.Name;
+        section.DateUpdated = DateTime.UtcNow;
         _repository.Update(section);
         await _repository.SaveChangesAsync();
 

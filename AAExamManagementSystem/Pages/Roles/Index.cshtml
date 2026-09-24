@@ -20,7 +20,7 @@
 <div class="modal fade" id="createRoleModal" tabindex="-1" aria-labelledby="createRoleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form method="post" asp-page-handler="Create">
+            <form method="post" asp-page-handler="Create" data-confirm-title="Create role?" data-confirm-text="Are you sure you want to create &quot;{name}&quot;?" data-confirm-name-field="NewRole.Name" data-confirm-button="Create">
                 <div class="modal-header">
                     <h5 class="modal-title" id="createRoleModalLabel">New Role</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -56,6 +56,7 @@
     <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
     <script src="~/js/sweetalert-toast.js" asp-append-version="true"></script>
+    <script src="~/js/sweetalert-confirm.js" asp-append-version="true"></script>
     <partial name="_SuccessToast" />
     <script>
         $(function () {

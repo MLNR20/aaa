@@ -11,7 +11,9 @@
     {
         new DetailsField("Id", Model.Course.Id.ToString()),
         new DetailsField("Name", Model.Course.Name),
-        new DetailsField("School Name", Model.Course.SchoolName ?? "-")
+        new DetailsField("School Name", Model.Course.SchoolName ?? "-"),
+        new DetailsField("Date Created", Model.Course.DateCreated.ToString("MMM d, yyyy h:mm tt")),
+        new DetailsField("Date Updated", Model.Course.DateUpdated.ToString("MMM d, yyyy h:mm tt"))
     },
     showStatus = true,
     isActive = Model.Course.IsActive,

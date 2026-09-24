@@ -1,0 +1,144 @@
+@page
+@model RegisterModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Applicant Registration - Exam Management System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap-icons/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body class="bg-light">
+    <main class="d-flex justify-content-center py-5 px-3 min-vh-100">
+        <div class="card login-card register-card border-0 shadow-sm w-100 align-self-start">
+            <div class="card-body p-4 p-md-5">
+                <div class="text-center mb-4">
+                    <div class="login-logo mx-auto mb-3">
+                        <i class="bi bi-person-plus" aria-hidden="true"></i>
+                    </div>
+                    <h1 class="h4 fw-bold mb-1">Applicant Registration</h1>
+                    <p class="text-muted mb-0">Fill in your details to apply for the entrance exam</p>
+                </div>
+
+                @if (Model.RegisteredName is not null)
+                {
+                    <div class="alert alert-success d-flex align-items-start gap-2" role="status">
+                        <i class="bi bi-check-circle-fill fs-5" aria-hidden="true"></i>
+                        <div>
+                            <strong>Thank you, @Model.RegisteredName!</strong>
+                            Your application has been submitted. We'll contact you by email with your exam schedule.
+                        </div>
+                    </div>
+                }
+
+                <form method="post" enctype="multipart/form-data" novalidate>
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2" role="alert"></div>
+
+                    <h2 class="h6 text-uppercase text-muted fw-semibold mb-3">Personal information</h2>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label asp-for="Input.FirstName" class="form-label fw-semibold"></label>
+                            <input asp-for="Input.FirstName" class="form-control" autocomplete="given-name" />
+                            <span asp-validation-for="Input.FirstName" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Input.LastName" class="form-label fw-semibold"></label>
+                            <input asp-for="Input.LastName" class="form-control" autocomplete="family-name" />
+                            <span asp-validation-for="Input.LastName" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Input.StudentNo" class="form-label fw-semibold"></label>
+                            <input asp-for="Input.StudentNo" class="form-control" />
+                            <span asp-validation-for="Input.StudentNo" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Input.Email" class="form-label fw-semibold"></label>
+                            <input asp-for="Input.Email" class="form-control" type="email" autocomplete="email" />
+                            <span asp-validation-for="Input.Email" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <h2 class="h6 text-uppercase text-muted fw-semibold mb-3">Academic background</h2>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-8">
+                            <label asp-for="Input.School" class="form-label fw-semibold"></label>
+                            <input asp-for="Input.School" class="form-control" placeholder="Current or last school attended" />
+                            <span asp-validation-for="Input.School" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="Input.YearLevel" class="form-label fw-semibold"></label>
+                            <select asp-for="Input.YearLevel" class="form-select" asp-items="Model.YearLevelOptions">
+                                <option value="">-- Select --</option>
+                            </select>
+                            <span asp-validation-for="Input.YearLevel" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="Input.AcademicYear" class="form-label fw-semibold"></label>
+                            <input asp-for="Input.AcademicYear" class="form-control" placeholder="2026-2027" />
+                            <span asp-validation-for="Input.AcademicYear" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="Input.ExpectedGradDate" class="form-label fw-semibold"></label>
+                            <input asp-for="Input.ExpectedGradDate" class="form-control" type="month" />
+                            <span asp-validation-for="Input.ExpectedGradDate" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="Input.TermsRemaining" class="form-label fw-semibold"></label>
+                            <input asp-for="Input.TermsRemaining" class="form-control" type="number" min="0" max="20" />
+                            <span asp-validation-for="Input.TermsRemaining" class="text-danger small"></span>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-check">
+                                <input asp-for="Input.IsScholar" class="form-check-input" />
+                                <label asp-for="Input.IsScholar" class="form-check-label"></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="h6 text-uppercase text-muted fw-semibold mb-3">Program preference</h2>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label asp-for="Input.FirstChoice" class="form-label fw-semibold"></label>
+                            <select asp-for="Input.FirstChoice" class="form-select" asp-items="Model.CourseOptions">
+                                <option value="">-- Select course --</option>
+                            </select>
+                            <span asp-validation-for="Input.FirstChoice" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Input.SecondChoice" class="form-label fw-semibold"></label>
+                            <select asp-for="Input.SecondChoice" class="form-select" asp-items="Model.CourseOptions">
+                                <option value="">-- Optional --</option>
+                            </select>
+                            <span asp-validation-for="Input.SecondChoice" class="text-danger small"></span>
+                        </div>
+                        <div class="col-12">
+                            <label asp-for="ResumeFile" class="form-label fw-semibold">Resume <span class="text-muted fw-normal">(optional, PDF or Word, max 5 MB)</span></label>
+                            <input asp-for="ResumeFile" class="form-control" type="file" accept=".pdf,.doc,.docx" />
+                            <span asp-validation-for="ResumeFile" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold">
+                        <i class="bi bi-send me-1" aria-hidden="true"></i> Submit application
+                    </button>
+                    <p class="text-center text-muted small mt-3 mb-0">
+                        Staff member? <a asp-page="/Login">Sign in</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+</body>
+</html>

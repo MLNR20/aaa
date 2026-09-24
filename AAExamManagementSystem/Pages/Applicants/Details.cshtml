@@ -1,0 +1,57 @@
+@page "{id:int}"
+@model AAExamManagementSystem.Pages.Applicants.DetailsModel
+@{
+    ViewData["Title"] = "Applicant Details";
+    var a = Model.Applicant;
+}
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card border rounded-2">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">@a.FullName</h5>
+                @await Component.InvokeAsync("StatusPill", new { isActive = a.IsActive })
+            </div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-4">Student No.</dt>
+                    <dd class="col-sm-8">@a.StudentNo</dd>
+                    <dt class="col-sm-4">Email</dt>
+                    <dd class="col-sm-8"><a href="mailto:@a.Email">@a.Email</a></dd>
+                    <dt class="col-sm-4">School</dt>
+                    <dd class="col-sm-8">@(a.School ?? "—")</dd>
+                    <dt class="col-sm-4">Year Level</dt>
+                    <dd class="col-sm-8">@(a.YearLevel ?? "—")</dd>
+                    <dt class="col-sm-4">Academic Year</dt>
+                    <dd class="col-sm-8">@a.AcademicYear</dd>
+                    <dt class="col-sm-4">First Choice</dt>
+                    <dd class="col-sm-8">@(a.FirstChoice ?? "—")</dd>
+                    <dt class="col-sm-4">Second Choice</dt>
+                    <dd class="col-sm-8">@(a.SecondChoice ?? "—")</dd>
+                    <dt class="col-sm-4">Scholar</dt>
+                    <dd class="col-sm-8">@(a.IsScholar ? "Yes" : "No")</dd>
+                    <dt class="col-sm-4">Expected Graduation</dt>
+                    <dd class="col-sm-8">@(a.ExpectedGradDate ?? "—")</dd>
+                    <dt class="col-sm-4">Terms Remaining</dt>
+                    <dd class="col-sm-8">@a.TermsRemaining</dd>
+                    <dt class="col-sm-4">Resume</dt>
+                    <dd class="col-sm-8">
+                        @if (a.Resume is not null)
+                        {
+                            <a asp-page-handler="Resume" asp-route-id="@a.Id"><i class="bi bi-download" aria-hidden="true"></i> Download</a>
+                        }
+                        else
+                        {
+                            <span>—</span>
+                        }
+                    </dd>
+                    <dt class="col-sm-4">Registered</dt>
+                    <dd class="col-sm-8">@a.DateCreated.ToLocalTime().ToString("MMM d, yyyy h:mm tt")</dd>
+                </dl>
+            </div>
+            <div class="card-footer bg-white">
+                <a asp-page="Index" class="btn btn-secondary">Back</a>
+            </div>
+        </div>
+    </div>
+</div>

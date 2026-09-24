@@ -53,6 +53,7 @@ public class CoursesController : ControllerBase
 
         course.Name = dto.Name;
         course.IsActive = dto.IsActive;
+        course.DateUpdated = DateTime.UtcNow;
         _repository.Update(course);
         await _repository.SaveChangesAsync();
         return NoContent();

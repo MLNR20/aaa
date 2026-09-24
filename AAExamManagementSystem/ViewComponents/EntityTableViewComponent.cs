@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AAExamManagementSystem.ViewComponents;
 
-public record EntityTableRow(string Id, string Name, bool? IsActive = null, DateTime? DateCreated = null);
+public record EntityTableRow(string Id, string Name, bool? IsActive = null, DateTime? DateCreated = null, DateTime? DateUpdated = null);
 
 public record EntityTableViewModel(
     string TableId,
@@ -17,7 +17,9 @@ public record EntityTableViewModel(
     string? AddButtonHref,
     bool ShowStatusColumn,
     bool ShowDateCreatedColumn,
-    bool ConfirmDeleteWithSweetAlert);
+    bool ShowDateUpdatedColumn,
+    bool ConfirmDeleteWithSweetAlert,
+    bool ShowRowNumberColumn);
 
 public class EntityTableViewComponent : ViewComponent
 {
@@ -34,7 +36,9 @@ public class EntityTableViewComponent : ViewComponent
         string? addButtonHref = null,
         bool showStatusColumn = false,
         bool showDateCreatedColumn = false,
-        bool confirmDeleteWithSweetAlert = false)
+        bool showDateUpdatedColumn = false,
+        bool confirmDeleteWithSweetAlert = false,
+        bool showRowNumberColumn = false)
     {
         var model = new EntityTableViewModel(
             tableId,
@@ -49,7 +53,9 @@ public class EntityTableViewComponent : ViewComponent
             addButtonHref,
             showStatusColumn,
             showDateCreatedColumn,
-            confirmDeleteWithSweetAlert);
+            showDateUpdatedColumn,
+            confirmDeleteWithSweetAlert,
+            showRowNumberColumn);
 
         return View(model);
     }

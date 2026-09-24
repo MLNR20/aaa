@@ -15,9 +15,13 @@
             <dt class="col-sm-4">Name</dt>
             <dd class="col-sm-8">@Model.Section.Name</dd>
         </dl>
-        <form method="post">
+        <form method="post" data-confirm-title="Delete section?" data-confirm-text="Are you sure you want to delete &quot;{name}&quot;? This action cannot be undone." data-confirm-name="@Model.Section.Name" data-confirm-button="Delete" data-confirm-variant="danger">
             <button type="submit" class="btn btn-danger">Delete</button>
             <a asp-page="Index" class="btn btn-secondary">Cancel</a>
         </form>
     </div>
 </div>
+
+@section Scripts {
+    <partial name="_SweetAlertScripts" />
+}

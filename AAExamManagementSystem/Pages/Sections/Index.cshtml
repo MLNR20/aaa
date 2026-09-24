@@ -9,18 +9,21 @@
     tableId = "sectionsTable",
     basePath = "/Sections",
     emptyMessage = "No sections found.",
-    items = Model.Sections.Select(s => new EntityTableRow(s.Id.ToString(), s.Name)),
+    items = Model.Sections.Select(s => new EntityTableRow(s.Id.ToString(), s.Name, DateCreated: s.DateCreated, DateUpdated: s.DateUpdated)),
     title = "Sections",
     addButtonText = "New Section",
     addButtonModalTarget = "#createSectionModal",
     showStatusColumn = false,
-    confirmDeleteWithSweetAlert = true
+    showDateCreatedColumn = true,
+    showDateUpdatedColumn = true,
+    confirmDeleteWithSweetAlert = true,
+    showRowNumberColumn = true
 })
 
 <div class="modal fade" id="createSectionModal" tabindex="-1" aria-labelledby="createSectionModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form method="post" asp-page-handler="Create">
+            <form method="post" asp-page-handler="Create" id="createSectionForm">
                 <div class="modal-header">
                     <h5 class="modal-title" id="createSectionModalLabel">New Section</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -51,30 +54,51 @@
     <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script src="~/js/sweetalert-toast.js" asp-append-version="true"></script>
+    <partial name="_SuccessToast" />
     <script>
         $(function () {
             if ($('#sectionsTable').length) {
-                $('#sectionsTable').DataTable();
+                var table = $('#sectionsTable').DataTable({
+                    pagingType: 'simple_numbers',
+                    order: [[1, 'asc']],
+                    columnDefs: [{ targets: 0, orderable: false, searchable: false }]
+                });
+                // Keep the # column sequential across sorting, searching and paging.
+                table.on('draw.dt', function () {
+                    var start = table.page.info().start;
+                    table.column(0, { page: 'current' }).nodes().each(function (cell, i) {
+                        cell.textContent = start + i + 1;
+                    });
+                }).draw();
             }
             @if (Model.ShowCreateModal)
             {
                 <text>new bootstrap.Modal(document.getElementById('createSectionModal')).show();</text>
             }
 
-            @if (TempData["SuccessMessage"] is string successMessage)
-            {
-                <text>
+            var createForm = document.getElementById('createSectionForm');
+            createForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+                if (window.jQuery && $.fn.valid && !$(createForm).valid()) {
+                    return;
+                }
+                var name = createForm.querySelector('[name="NewSection.Name"]').value.trim();
                 Swal.fire({
-                    toast: true,
-                    position: 'top-end',
-                    icon: 'success',
-                    title: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(successMessage)),
-                    showConfirmButton: false,
-                    timer: 3000,
-                    timerProgressBar: true
+                    target: document.getElementById('createSectionModal'),
+                    title: 'Create section?',
+                    text: 'Are you sure you want to create "' + name + '"?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Create',
+                    confirmButtonColor: '#0d6efd',
+                    cancelButtonText: 'Cancel'
+                }).then(function (result) {
+                    if (result.isConfirmed) {
+                        createForm.submit();
+                    }
                 });
-                </text>
-            }
+            });
 
             document.querySelectorAll('.js-sweetalert-delete-form').forEach(function (form) {
                 form.addEventListener('submit', function (e) {

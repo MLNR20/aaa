@@ -52,6 +52,7 @@ public class SectionsController : ControllerBase
         if (section is null) return NotFound();
 
         section.Name = dto.Name;
+        section.DateUpdated = DateTime.UtcNow;
         _repository.Update(section);
         await _repository.SaveChangesAsync();
         return NoContent();

@@ -10,7 +10,9 @@
     fields = new[]
     {
         new DetailsField("Id", Model.Section.Id.ToString()),
-        new DetailsField("Name", Model.Section.Name)
+        new DetailsField("Name", Model.Section.Name),
+        new DetailsField("Date Created", Model.Section.DateCreated.ToString("MMM d, yyyy h:mm tt")),
+        new DetailsField("Date Updated", Model.Section.DateUpdated.ToString("MMM d, yyyy h:mm tt"))
     },
     editHref = $"/Sections/Edit/{Model.Section.Id}",
     backHref = "/Sections"

@@ -9,19 +9,20 @@
     tableId = "departmentsTable",
     basePath = "/Departments",
     emptyMessage = "No departments found.",
-    items = Model.Departments.Select(d => new EntityTableRow(d.Id.ToString(), d.Name, d.IsActive, d.CreatedAt)),
+    items = Model.Departments.Select(d => new EntityTableRow(d.Id.ToString(), d.Name, d.IsActive, d.CreatedAt, d.DateUpdated)),
     title = "Departments",
     addButtonText = "New Department",
     addButtonModalTarget = "#createDepartmentModal",
     showStatusColumn = true,
     showDateCreatedColumn = true,
+    showDateUpdatedColumn = true,
     confirmDeleteWithSweetAlert = true
 })
 
 <div class="modal fade" id="createDepartmentModal" tabindex="-1" aria-labelledby="createDepartmentModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form method="post" asp-page-handler="Create">
+            <form method="post" asp-page-handler="Create" id="createDepartmentForm">
                 <div class="modal-header">
                     <h5 class="modal-title" id="createDepartmentModalLabel">New Department</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -67,6 +68,29 @@
             {
                 <text>new bootstrap.Modal(document.getElementById('createDepartmentModal')).show();</text>
             }
+
+            var createForm = document.getElementById('createDepartmentForm');
+            createForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+                if (window.jQuery && $.fn.valid && !$(createForm).valid()) {
+                    return;
+                }
+                var name = createForm.querySelector('[name="NewDepartment.Name"]').value.trim();
+                Swal.fire({
+                    target: document.getElementById('createDepartmentModal'),
+                    title: 'Create department?',
+                    text: 'Are you sure you want to create "' + name + '"?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Create',
+                    confirmButtonColor: '#0d6efd',
+                    cancelButtonText: 'Cancel'
+                }).then(function (result) {
+                    if (result.isConfirmed) {
+                        createForm.submit();
+                    }
+                });
+            });
 
             document.querySelectorAll('.js-sweetalert-delete-form').forEach(function (form) {
                 form.addEventListener('submit', function (e) {

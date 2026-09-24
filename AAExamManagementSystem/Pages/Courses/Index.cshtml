@@ -9,13 +9,16 @@
     tableId = "coursesTable",
     basePath = "/Courses",
     emptyMessage = "No courses found.",
-    items = Model.Courses.Select(c => new EntityTableRow(c.Id.ToString(), c.Name, c.IsActive)),
+    items = Model.Courses.Select(c => new EntityTableRow(c.Id.ToString(), c.Name, c.IsActive, c.DateCreated, c.DateUpdated)),
     title = "Courses",
     titleClass = "fw-medium",
     addButtonText = "New Course",
     addButtonModalTarget = "#createCourseModal",
     showStatusColumn = true,
-    confirmDeleteWithSweetAlert = true
+    showDateCreatedColumn = true,
+    showDateUpdatedColumn = true,
+    confirmDeleteWithSweetAlert = true,
+    showRowNumberColumn = true
 })
 
 <div class="modal fade" id="createCourseModal" tabindex="-1" aria-labelledby="createCourseModalLabel" aria-hidden="true">
@@ -66,7 +69,18 @@
     <script>
         $(function () {
             if ($('#coursesTable').length) {
-                $('#coursesTable').DataTable();
+                var table = $('#coursesTable').DataTable({
+                    pagingType: 'simple_numbers',
+                    order: [[1, 'asc']],
+                    columnDefs: [{ targets: 0, orderable: false, searchable: false }]
+                });
+                // Keep the # column sequential across sorting, searching and paging.
+                table.on('draw.dt', function () {
+                    var start = table.page.info().start;
+                    table.column(0, { page: 'current' }).nodes().each(function (cell, i) {
+                        cell.textContent = start + i + 1;
+                    });
+                }).draw();
             }
             @if (Model.ShowCreateModal)
             {

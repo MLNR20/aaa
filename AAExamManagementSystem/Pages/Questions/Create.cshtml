@@ -1,0 +1,27 @@
+@page
+@model AAExamManagementSystem.Pages.Questions.CreateModel
+@{
+    ViewData["Title"] = "New Question";
+}
+
+<h1>New Question</h1>
+
+<div class="row">
+    <div class="col-lg-8">
+        <form method="post">
+            <partial name="_QuestionForm" for="Question" view-data="@(new ViewDataDictionary(ViewData)
+            {
+                ["QuestionTypeOptions"] = Model.QuestionTypeOptions,
+                ["SectionOptions"] = Model.SectionOptions,
+                ["ChoiceTypeIds"] = Model.ChoiceTypeIds
+            })" />
+            <button type="submit" class="btn btn-primary">Create</button>
+            <a asp-page="Index" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/js/question-form.js" asp-append-version="true"></script>
+}

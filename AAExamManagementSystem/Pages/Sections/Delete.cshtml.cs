@@ -4,6 +4,7 @@ using AAExamManagementSystem.Repository;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 
 namespace AAExamManagementSystem.Pages.Sections;
 
@@ -41,7 +42,16 @@ public class DeleteModel : PageModel
         }
 
         _repository.Remove(section);
-        await _repository.SaveChangesAsync();
+        try
+        {
+            await _repository.SaveChangesAsync();
+        }
+        catch (DbUpdateException)
+        {
+            // Questions reference sections with ON DELETE RESTRICT.
+            TempData["ErrorMessage"] = $"Section '{section.Name}' can't be deleted because it still has questions. Move or delete those questions first.";
+            return RedirectToPage("Index");
+        }
 
         TempData["SuccessMessage"] = $"Section '{section.Name}' deleted successfully.";
         return RedirectToPage("Index");
