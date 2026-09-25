@@ -4,5 +4,129 @@
     ViewData["Title"] = "Users";
 }
 
-<h1>Users</h1>
-<p class="text-muted">User management is not implemented yet.</p>
+<div class="card border rounded-2 p-3">
+    <div class="card-header bg-white border-bottom-0 d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Users</h5>
+    </div>
+    <div class="card-body">
+        @if (Model.Users.Count == 0)
+        {
+            <p class="text-muted mb-0">No users found.</p>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table id="usersTable" class="table table-striped table-hover align-middle w-100">
+                    <thead>
+                        <tr>
+                            <th class="text-start">Username</th>
+                            <th class="text-start">Name</th>
+                            <th class="text-start">Email</th>
+                            <th class="text-start">Role</th>
+                            <th class="text-start">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Model.Users)
+                        {
+                            <tr>
+                                <td class="text-start">@user.UserName</td>
+                                <td class="text-start">@user.FullName</td>
+                                <td class="text-start">@user.Email</td>
+                                <td class="text-start">
+                                    @if (user.Role is null)
+                                    {
+                                        <span class="text-muted">None</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge text-bg-secondary">@user.Role</span>
+                                    }
+                                </td>
+                                <td class="text-start">
+                                    <button type="button" class="btn btn-primary js-assign-role"
+                                            data-id="@user.Id" data-name="@user.UserName" data-role="@user.Role">
+                                        Change Role
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
+
+<form id="assignRoleForm" method="post" asp-page-handler="AssignRole" class="d-none">
+    <input type="hidden" name="id" />
+    <input type="hidden" name="role" />
+</form>
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap5.min.css" />
+}
+
+@section Scripts {
+    <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
+    <partial name="_SweetAlertScripts" />
+    <script>
+        $(function () {
+            if ($('#usersTable').length) {
+                $('#usersTable').DataTable();
+            }
+
+            var roleNames = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.RoleNames));
+            var roleOptions = {};
+            roleNames.forEach(function (r) { roleOptions[r] = r; });
+            var form = document.getElementById('assignRoleForm');
+
+            // Delegated so it keeps working after DataTables paging/redraws.
+            $('#usersTable').on('click', '.js-assign-role', function () {
+                var button = this;
+                var name = button.dataset.name;
+                var currentRole = button.dataset.role || '';
+
+                Swal.fire({
+                    title: 'Change role',
+                    text: 'Select a role for "' + name + '".',
+                    input: 'select',
+                    inputOptions: roleOptions,
+                    inputValue: currentRole,
+                    inputPlaceholder: 'Select a role',
+                    showCancelButton: true,
+                    confirmButtonText: 'Next',
+                    confirmButtonColor: '#0d6efd',
+                    inputValidator: function (value) {
+                        if (!value) {
+                            return 'Please select a role.';
+                        }
+                        if (value === currentRole) {
+                            return '"' + name + '" already has this role.';
+                        }
+                    }
+                }).then(function (pick) {
+                    if (!pick.isConfirmed) {
+                        return;
+                    }
+                    Swal.fire({
+                        title: 'Assign role?',
+                        text: 'Change "' + name + '" from ' + (currentRole || 'no role') + ' to ' + pick.value + '?',
+                        icon: 'question',
+                        showCancelButton: true,
+                        confirmButtonText: 'Assign',
+                        confirmButtonColor: '#0d6efd',
+                        cancelButtonText: 'Cancel'
+                    }).then(function (confirm) {
+                        if (confirm.isConfirmed) {
+                            form.elements['id'].value = button.dataset.id;
+                            form.elements['role'].value = pick.value;
+                            form.submit();
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+}

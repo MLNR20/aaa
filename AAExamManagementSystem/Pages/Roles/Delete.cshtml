@@ -15,34 +15,13 @@
             <dt class="col-sm-4">Name</dt>
             <dd class="col-sm-8">@Model.Role.Name</dd>
         </dl>
-        <form method="post" class="js-sweetalert-delete-form">
-            <button type="submit" class="btn btn-danger js-sweetalert-delete" data-name="@Model.Role.Name">Delete</button>
+        <form method="post" data-confirm-title="Delete role?" data-confirm-text="Are you sure you want to delete &quot;{name}&quot;? This action cannot be undone." data-confirm-name="@Model.Role.Name" data-confirm-button="Delete" data-confirm-variant="danger">
+            <button type="submit" class="btn btn-danger">Delete</button>
             <a asp-page="Index" class="btn btn-secondary">Cancel</a>
         </form>
     </div>
 </div>
 
 @section Scripts {
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
-    <script>
-        document.querySelectorAll('.js-sweetalert-delete-form').forEach(function (form) {
-            form.addEventListener('submit', function (e) {
-                e.preventDefault();
-                var name = form.querySelector('.js-sweetalert-delete').dataset.name;
-                Swal.fire({
-                    title: 'Delete role?',
-                    text: 'Are you sure you want to delete "' + name + '"? This action cannot be undone.',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonText: 'Delete',
-                    confirmButtonColor: '#dc3545',
-                    cancelButtonText: 'Cancel'
-                }).then(function (result) {
-                    if (result.isConfirmed) {
-                        form.submit();
-                    }
-                });
-            });
-        });
-    </script>
+    <partial name="_SweetAlertScripts" />
 }
