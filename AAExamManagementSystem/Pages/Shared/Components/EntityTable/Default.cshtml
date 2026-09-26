@@ -61,6 +61,10 @@
                                 <td class="text-start">
                                     <a href="@Model.BasePath/Details/@item.Id" class="btn btn-secondary">Details</a>
                                     <a href="@Model.BasePath/Edit/@item.Id" class="btn btn-primary">Edit</a>
+                                    @if (!string.IsNullOrEmpty(Model.SimulateBasePath))
+                                    {
+                                        <a href="@Model.SimulateBasePath/@item.Id" class="btn btn-outline-primary">@(Model.SimulateButtonText ?? "Simulate")</a>
+                                    }
                                     @if (Model.UseSoftDelete)
                                     {
                                         var isActive = item.IsActive ?? true;

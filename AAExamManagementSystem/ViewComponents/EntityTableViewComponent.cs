@@ -20,7 +20,9 @@ public record EntityTableViewModel(
     bool ConfirmDeleteWithSweetAlert,
     bool ConfirmCreateWithSweetAlert,
     string? EntityName,
-    bool UseSoftDelete);
+    bool UseSoftDelete,
+    string? SimulateButtonText = null,
+    string? SimulateBasePath = null);
 
 public class EntityTableViewComponent : ViewComponent
 {
@@ -40,7 +42,9 @@ public class EntityTableViewComponent : ViewComponent
         bool confirmDeleteWithSweetAlert = false,
         bool confirmCreateWithSweetAlert = false,
         string? entityName = null,
-        bool useSoftDelete = false)
+        bool useSoftDelete = false,
+        string? simulateButtonText = null,
+        string? simulateBasePath = null)
     {
         var model = new EntityTableViewModel(
             tableId,
@@ -58,7 +62,9 @@ public class EntityTableViewComponent : ViewComponent
             confirmDeleteWithSweetAlert,
             confirmCreateWithSweetAlert,
             entityName,
-            useSoftDelete);
+            useSoftDelete,
+            simulateButtonText,
+            simulateBasePath);
 
         return View(model);
     }

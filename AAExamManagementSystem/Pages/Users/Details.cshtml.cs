@@ -1,5 +1,6 @@
 using AAExamManagementSystem.Models.Dtos;
 using AAExamManagementSystem.Models.Entities;
+using AAExamManagementSystem.Repository;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -10,11 +11,13 @@ namespace AAExamManagementSystem.Pages.Users;
 public class DetailsModel : PageModel
 {
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly IGenericRepository<Section> _sectionRepository;
     private readonly IMapper _mapper;
 
-    public DetailsModel(UserManager<ApplicationUser> userManager, IMapper mapper)
+    public DetailsModel(UserManager<ApplicationUser> userManager, IGenericRepository<Section> sectionRepository, IMapper mapper)
     {
         _userManager = userManager;
+        _sectionRepository = sectionRepository;
         _mapper = mapper;
     }
 
@@ -32,6 +35,16 @@ public class DetailsModel : PageModel
         var roles = await _userManager.GetRolesAsync(user);
         TargetUser.Role = roles.Count > 0 ? string.Join(", ", roles) : "-";
         TargetUser.IsActive = !(user.LockoutEnd.HasValue && user.LockoutEnd > DateTimeOffset.UtcNow);
+
+        if (TargetUser.SectionId.HasValue)
+        {
+            var section = await _sectionRepository.GetByIdAsync(TargetUser.SectionId.Value);
+            TargetUser.SectionName = section?.Name ?? "—";
+        }
+        else
+        {
+            TargetUser.SectionName = "—";
+        }
 
         return Page();
     }

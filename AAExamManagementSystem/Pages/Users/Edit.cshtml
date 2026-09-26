@@ -25,6 +25,13 @@
                     <input asp-for="TargetUser.Email" class="form-control" />
                     <span asp-validation-for="TargetUser.Email" class="text-danger"></span>
                 </div>
+                <div class="mb-3">
+                    <label asp-for="TargetUser.SectionId" class="form-label"></label>
+                    <select asp-for="TargetUser.SectionId" class="form-select" asp-items="Model.SectionOptions">
+                        <option value="">-- No Section --</option>
+                    </select>
+                    <span asp-validation-for="TargetUser.SectionId" class="text-danger"></span>
+                </div>
                 <div class="form-check form-switch mb-3">
                     <input asp-for="TargetUser.IsActive" class="form-check-input" role="switch" />
                     <label asp-for="TargetUser.IsActive" class="form-check-label"></label>

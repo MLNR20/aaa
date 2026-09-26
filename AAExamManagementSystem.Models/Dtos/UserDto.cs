@@ -12,6 +12,8 @@ public class UserDto
     public string FullName => $"{FirstName} {LastName}".Trim();
     public string Role { get; set; } = string.Empty;
     public bool IsActive { get; set; } = true;
+    public int? SectionId { get; set; }
+    public string SectionName { get; set; } = string.Empty;
 }
 
 public class UserEditDto
@@ -32,4 +34,7 @@ public class UserEditDto
 
     [Display(Name = "Active")]
     public bool IsActive { get; set; } = true;
+
+    [Display(Name = "Section")]
+    public int? SectionId { get; set; }
 }

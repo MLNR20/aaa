@@ -1,5 +1,6 @@
 using AAExamManagementSystem.Models.Dtos;
 using AAExamManagementSystem.Models.Entities;
+using AAExamManagementSystem.Repository;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -10,11 +11,13 @@ namespace AAExamManagementSystem.Pages.Users;
 public class IndexModel : PageModel
 {
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly IGenericRepository<Section> _sectionRepository;
     private readonly IMapper _mapper;
 
-    public IndexModel(UserManager<ApplicationUser> userManager, IMapper mapper)
+    public IndexModel(UserManager<ApplicationUser> userManager, IGenericRepository<Section> sectionRepository, IMapper mapper)
     {
         _userManager = userManager;
+        _sectionRepository = sectionRepository;
         _mapper = mapper;
     }
 
@@ -44,6 +47,8 @@ public class IndexModel : PageModel
     private async Task LoadUsersAsync()
     {
         var users = _userManager.Users.OrderBy(u => u.UserName).ToList();
+        var sections = await _sectionRepository.GetAllAsync();
+        var sectionNames = sections.ToDictionary(s => s.Id, s => s.Name);
         var userDtos = new List<UserDto>();
 
         foreach (var user in users)
@@ -52,6 +57,7 @@ public class IndexModel : PageModel
             var roles = await _userManager.GetRolesAsync(user);
             dto.Role = roles.Count > 0 ? string.Join(", ", roles) : "-";
             dto.IsActive = !(user.LockoutEnd.HasValue && user.LockoutEnd > DateTimeOffset.UtcNow);
+            dto.SectionName = dto.SectionId.HasValue ? sectionNames.GetValueOrDefault(dto.SectionId.Value, "—") : "—";
             userDtos.Add(dto);
         }
 

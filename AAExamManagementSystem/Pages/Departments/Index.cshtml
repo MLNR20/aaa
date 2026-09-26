@@ -11,6 +11,7 @@
     emptyMessage = "No departments found.",
     items = Model.Departments.Select(d => new EntityTableRow(d.Id.ToString(), d.Name, d.IsActive, d.CreatedAt)),
     title = "Departments",
+    titleClass = "fw-semibold",
     addButtonText = "New Department",
     addButtonModalTarget = "#createDepartmentModal",
     showStatusColumn = true,

@@ -30,7 +30,8 @@ public class MappingProfile : Profile
 
         CreateMap<ApplicationUser, UserDto>()
             .ForMember(dest => dest.Role, opt => opt.Ignore())
-            .ForMember(dest => dest.IsActive, opt => opt.Ignore());
+            .ForMember(dest => dest.IsActive, opt => opt.Ignore())
+            .ForMember(dest => dest.SectionName, opt => opt.Ignore());
 
         CreateMap<Applicant, ApplicantDto>();
         CreateMap<ApplicantRegisterDto, Applicant>()

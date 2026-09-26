@@ -38,7 +38,13 @@
                     </div>
                     <div class="mb-3">
                         <label asp-for="NewCourse.SchoolName" class="form-label"></label>
-                        <input asp-for="NewCourse.SchoolName" class="form-control" />
+                        <select asp-for="NewCourse.SchoolName" class="form-select">
+                            <option value="">-- Select School --</option>
+                            <option value="SMIT">SMIT</option>
+                            <option value="SDA">SDA</option>
+                            <option value="SHRIM">SHRIM</option>
+                            <option value="SDEAS">SDEAS</option>
+                        </select>
                         <span asp-validation-for="NewCourse.SchoolName" class="text-danger"></span>
                     </div>
                     <div class="form-check form-switch">
