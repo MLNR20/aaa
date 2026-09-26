@@ -15,13 +15,16 @@
     addButtonModalTarget = "#createDepartmentModal",
     showStatusColumn = true,
     showDateCreatedColumn = true,
-    confirmDeleteWithSweetAlert = true
+    confirmDeleteWithSweetAlert = true,
+    confirmCreateWithSweetAlert = true,
+    entityName = "Department",
+    useSoftDelete = true
 })
 
 <div class="modal fade" id="createDepartmentModal" tabindex="-1" aria-labelledby="createDepartmentModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form method="post" asp-page-handler="Create">
+            <form method="post" asp-page-handler="Create" class="js-sweetalert-create-form">
                 <div class="modal-header">
                     <h5 class="modal-title" id="createDepartmentModalLabel">New Department</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -61,32 +64,12 @@
     <script>
         $(function () {
             if ($('#departmentsTable').length) {
-                $('#departmentsTable').DataTable();
+                initEntityTable('departmentsTable');
             }
             @if (Model.ShowCreateModal)
             {
                 <text>new bootstrap.Modal(document.getElementById('createDepartmentModal')).show();</text>
             }
-
-            document.querySelectorAll('.js-sweetalert-delete-form').forEach(function (form) {
-                form.addEventListener('submit', function (e) {
-                    e.preventDefault();
-                    var name = form.querySelector('.js-sweetalert-delete').dataset.name;
-                    Swal.fire({
-                        title: 'Delete department?',
-                        text: 'Are you sure you want to delete "' + name + '"? This action cannot be undone.',
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonText: 'Delete',
-                        confirmButtonColor: '#dc3545',
-                        cancelButtonText: 'Cancel'
-                    }).then(function (result) {
-                        if (result.isConfirmed) {
-                            form.submit();
-                        }
-                    });
-                });
-            });
         });
     </script>
 }

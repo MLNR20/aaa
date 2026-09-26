@@ -2,7 +2,7 @@ namespace AAExamManagementSystem.Models.Entities;
 
 public class Question
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; } = Guid.NewGuid();
     public int QuestionTypeId { get; set; }
     public QuestionType QuestionType { get; set; } = null!;
     public int SectionId { get; set; }

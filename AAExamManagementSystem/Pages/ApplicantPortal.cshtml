@@ -1,0 +1,73 @@
+@page
+@model ApplicantPortalModel
+@{
+    ViewData["Title"] = "Applicant Portal";
+}
+
+<h1 class="h4 fw-bold mb-4"><i class="bi bi-mortarboard" aria-hidden="true"></i> Applicant Portal</h1>
+
+@if (Model.Applicant is null)
+{
+    <div class="alert alert-warning">
+        No applicant profile is linked to this account.
+    </div>
+}
+else
+{
+    <div class="card border rounded-2 p-3 mb-4">
+        <div class="card-header bg-white border-bottom-0">
+            <h5 class="mb-0">Your Application</h5>
+        </div>
+        <div class="card-body">
+            <dl class="row mb-0">
+                <dt class="col-sm-4">Student No.</dt>
+                <dd class="col-sm-8">@Model.Applicant.StudentNo</dd>
+
+                <dt class="col-sm-4">Full Name</dt>
+                <dd class="col-sm-8">@Model.Applicant.FirstName @Model.Applicant.LastName</dd>
+
+                <dt class="col-sm-4">Email</dt>
+                <dd class="col-sm-8">@Model.Applicant.Email</dd>
+
+                <dt class="col-sm-4">Academic Year</dt>
+                <dd class="col-sm-8">@Model.Applicant.AcademicYear</dd>
+
+                <dt class="col-sm-4">Year Level</dt>
+                <dd class="col-sm-8">@(Model.Applicant.YearLevel ?? "-")</dd>
+
+                <dt class="col-sm-4">School</dt>
+                <dd class="col-sm-8">@(Model.Applicant.School ?? "-")</dd>
+
+                <dt class="col-sm-4">First Choice</dt>
+                <dd class="col-sm-8">@(Model.Applicant.FirstChoice ?? "-")</dd>
+
+                <dt class="col-sm-4">Second Choice</dt>
+                <dd class="col-sm-8">@(Model.Applicant.SecondChoice ?? "-")</dd>
+
+                <dt class="col-sm-4">Expected Graduation Date</dt>
+                <dd class="col-sm-8">@(Model.Applicant.ExpectedGradDate ?? "-")</dd>
+
+                <dt class="col-sm-4">Terms Remaining</dt>
+                <dd class="col-sm-8">@Model.Applicant.TermsRemaining</dd>
+
+                <dt class="col-sm-4">Scholar</dt>
+                <dd class="col-sm-8">@(Model.Applicant.IsScholar ? "Yes" : "No")</dd>
+
+                @if (!string.IsNullOrEmpty(Model.Applicant.Resume))
+                {
+                    <dt class="col-sm-4">Resume</dt>
+                    <dd class="col-sm-8"><a href="@Model.Applicant.Resume" target="_blank" rel="noopener">@Model.Applicant.Resume</a></dd>
+                }
+
+                <dt class="col-sm-4">Status</dt>
+                <dd class="col-sm-8">@(Model.Applicant.IsActive ? "Active" : "Inactive")</dd>
+
+                <dt class="col-sm-4">Submitted On</dt>
+                <dd class="col-sm-8">@Model.Applicant.DateCreated.ToString("MMM d, yyyy")</dd>
+
+                <dt class="col-sm-4">Exam Attempts</dt>
+                <dd class="col-sm-8">@Model.AttemptCount</dd>
+            </dl>
+        </div>
+    </div>
+}

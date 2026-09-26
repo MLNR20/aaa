@@ -1,0 +1,317 @@
+@page
+@model AAExamManagementSystem.Pages.Analytics.IndexModel
+@{
+    ViewData["Title"] = "Analytics";
+}
+
+<div class="d-flex flex-wrap justify-content-between align-items-end gap-2 mb-4">
+    <div>
+        <h1 class="h3 fw-bold mb-1">Analytics</h1>
+        <p class="text-muted mb-0">Applicant, exam and question bank overview.</p>
+    </div>
+    <span class="text-muted small">Updated @DateTime.Now.ToString("MMM d, yyyy h:mm tt")</span>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-sm-6 col-xl-3">
+        <div class="card stat-tile h-100">
+            <div class="card-body">
+                <div class="stat-label"><i class="bi bi-people" aria-hidden="true"></i> Applicants</div>
+                <div class="stat-value">@Model.TotalApplicants.ToString("N0")</div>
+                <div class="stat-meta">@Model.ActiveApplicants.ToString("N0") active · @Model.ScholarApplicants.ToString("N0") scholars</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="card stat-tile h-100">
+            <div class="card-body">
+                <div class="stat-label"><i class="bi bi-pencil-square" aria-hidden="true"></i> Exam attempts</div>
+                <div class="stat-value">@Model.TotalAttempts.ToString("N0")</div>
+                <div class="stat-meta">
+                    @if (Model.TotalApplicants > 0)
+                    {
+                        @($"{(double)Model.TotalAttempts / Model.TotalApplicants:0.0} per applicant")
+                    }
+                    else
+                    {
+                        @:No applicants yet
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="card stat-tile h-100">
+            <div class="card-body">
+                <div class="stat-label"><i class="bi bi-graph-up" aria-hidden="true"></i> Average score</div>
+                <div class="stat-value">@(Model.AverageScore?.ToString("0.0") ?? "—")</div>
+                <div class="stat-meta">Highest: @(Model.HighestScore?.ToString() ?? "—")</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="card stat-tile h-100">
+            <div class="card-body">
+                <div class="stat-label"><i class="bi bi-question-circle" aria-hidden="true"></i> Question bank</div>
+                <div class="stat-value">@Model.TotalQuestions.ToString("N0")</div>
+                <div class="stat-meta">@Model.QuestionsPerSection.Count(s => s.Count > 0) sections covered · @Model.TotalStaff.ToString("N0") staff</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 mb-3">
+    <div class="col-lg-7">
+        <div class="card chart-card h-100">
+            <div class="card-body">
+                <h2 class="chart-title">New applicants</h2>
+                <p class="chart-subtitle">Registrations per month, last 12 months</p>
+                <div class="chart-box"><canvas id="applicantTrendChart" aria-label="Bar chart of new applicants per month"></canvas></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="card chart-card h-100">
+            <div class="card-body">
+                <h2 class="chart-title">Score distribution</h2>
+                <p class="chart-subtitle">Number of attempts by total score</p>
+                <div class="chart-box"><canvas id="scoreDistributionChart" aria-label="Histogram of attempt scores"></canvas></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 mb-3">
+    <div class="col-lg-7">
+        <div class="card chart-card h-100">
+            <div class="card-body">
+                <h2 class="chart-title">Department preferences</h2>
+                <p class="chart-subtitle">Applicants choosing each department as first or second choice</p>
+                <div class="chart-box chart-box-tall"><canvas id="departmentChoiceChart" aria-label="Grouped bar chart of first and second department choices"></canvas></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="card chart-card h-100">
+            <div class="card-body">
+                <h2 class="chart-title">Staff per department</h2>
+                <p class="chart-subtitle">Users assigned to each active department</p>
+                <div class="chart-box chart-box-tall"><canvas id="staffDepartmentChart" aria-label="Bar chart of staff per department"></canvas></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 mb-3">
+    <div class="col-lg-6">
+        <div class="card chart-card h-100">
+            <div class="card-body">
+                <h2 class="chart-title">Questions by section</h2>
+                <p class="chart-subtitle">Active questions in each section</p>
+                <div class="chart-box"><canvas id="questionSectionChart" aria-label="Bar chart of questions per section"></canvas></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card chart-card h-100">
+            <div class="card-body">
+                <h2 class="chart-title">Questions by type</h2>
+                <p class="chart-subtitle">Active questions for each question type</p>
+                <div class="chart-box"><canvas id="questionTypeChart" aria-label="Bar chart of questions per type"></canvas></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card chart-card">
+    <div class="card-body">
+        <h2 class="chart-title">Top scores</h2>
+        <p class="chart-subtitle">Five highest-scoring exam attempts</p>
+        @if (Model.TopAttempts.Count == 0)
+        {
+            <p class="chart-empty">No exam attempts recorded yet.</p>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-sm align-middle mb-0 analytics-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Applicant</th>
+                            <th scope="col">Student no.</th>
+                            <th scope="col">First choice</th>
+                            <th scope="col" class="text-end">Score</th>
+                            <th scope="col" class="text-end">Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (var i = 0; i < Model.TopAttempts.Count; i++)
+                        {
+                            var attempt = Model.TopAttempts[i];
+                            <tr>
+                                <td class="text-muted">@(i + 1)</td>
+                                <td class="fw-semibold">@attempt.ApplicantName</td>
+                                <td>@attempt.StudentNo</td>
+                                <td>@(attempt.FirstChoice ?? "—")</td>
+                                <td class="text-end fw-semibold">@attempt.Score</td>
+                                <td class="text-end text-muted">@attempt.DateTaken.ToLocalTime().ToString("MMM d, yyyy")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <script>
+        (function () {
+            var SERIES_1 = '#2a78d6';
+            var SERIES_2 = '#eb6834';
+            var TEXT_SECONDARY = '#52514e';
+            var GRID = '#e9e8e4';
+
+            Chart.defaults.font.family = "'Manrope', sans-serif";
+            Chart.defaults.color = TEXT_SECONDARY;
+            Chart.defaults.plugins.tooltip.backgroundColor = '#0b0b0b';
+            Chart.defaults.plugins.tooltip.padding = 10;
+            Chart.defaults.plugins.tooltip.cornerRadius = 6;
+            Chart.defaults.plugins.tooltip.displayColors = false;
+
+            function isEmpty(values) {
+                return values.every(function (v) { return v === 0; });
+            }
+
+            function showEmpty(canvasId, message) {
+                var canvas = document.getElementById(canvasId);
+                var p = document.createElement('p');
+                p.className = 'chart-empty';
+                p.textContent = message;
+                canvas.parentElement.replaceWith(p);
+            }
+
+            function countAxis() {
+                return {
+                    beginAtZero: true,
+                    ticks: { precision: 0 },
+                    grid: { color: GRID },
+                    border: { display: false }
+                };
+            }
+
+            function categoryAxis() {
+                return { grid: { display: false }, border: { color: GRID } };
+            }
+
+            function barChart(canvasId, rows, opts) {
+                var labels = rows.map(function (r) { return r.label; });
+                var values = rows.map(function (r) { return r.count; });
+                if (rows.length === 0 || isEmpty(values)) {
+                    showEmpty(canvasId, opts.emptyMessage);
+                    return;
+                }
+                var horizontal = !!opts.horizontal;
+                new Chart(document.getElementById(canvasId), {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: opts.seriesLabel,
+                            data: values,
+                            backgroundColor: SERIES_1,
+                            borderRadius: 4,
+                            borderSkipped: 'start',
+                            maxBarThickness: 32,
+                            categoryPercentage: opts.histogram ? 0.96 : 0.7,
+                            barPercentage: opts.histogram ? 1 : 0.9
+                        }]
+                    },
+                    options: {
+                        indexAxis: horizontal ? 'y' : 'x',
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: function (ctx) {
+                                        return ctx.parsed[horizontal ? 'x' : 'y'] + ' ' + opts.unit;
+                                    }
+                                }
+                            }
+                        },
+                        scales: horizontal
+                            ? { x: countAxis(), y: categoryAxis() }
+                            : { x: categoryAxis(), y: countAxis() }
+                    }
+                });
+            }
+
+            barChart('applicantTrendChart', @Json.Serialize(Model.ApplicantsPerMonth), {
+                seriesLabel: 'New applicants', unit: 'applicants',
+                emptyMessage: 'No applicants registered in the last 12 months.'
+            });
+
+            barChart('scoreDistributionChart', @Json.Serialize(Model.ScoreDistribution), {
+                seriesLabel: 'Attempts', unit: 'attempts', histogram: true,
+                emptyMessage: 'No exam attempts recorded yet.'
+            });
+
+            barChart('staffDepartmentChart', @Json.Serialize(Model.StaffPerDepartment), {
+                seriesLabel: 'Staff', unit: 'staff', horizontal: true,
+                emptyMessage: 'No staff assigned to departments yet.'
+            });
+
+            barChart('questionSectionChart', @Json.Serialize(Model.QuestionsPerSection), {
+                seriesLabel: 'Questions', unit: 'questions',
+                emptyMessage: 'No questions have been added to sections yet.'
+            });
+
+            barChart('questionTypeChart', @Json.Serialize(Model.QuestionsPerType), {
+                seriesLabel: 'Questions', unit: 'questions',
+                emptyMessage: 'No questions have been added yet.'
+            });
+
+            var choices = @Json.Serialize(Model.DepartmentChoices);
+            var firstValues = choices.map(function (c) { return c.firstChoice; });
+            var secondValues = choices.map(function (c) { return c.secondChoice; });
+            if (isEmpty(firstValues.concat(secondValues))) {
+                showEmpty('departmentChoiceChart', 'No applicants have picked a department yet.');
+            } else {
+                new Chart(document.getElementById('departmentChoiceChart'), {
+                    type: 'bar',
+                    data: {
+                        labels: choices.map(function (c) { return c.name; }),
+                        datasets: [
+                            { label: 'First choice', data: firstValues, backgroundColor: SERIES_1 },
+                            { label: 'Second choice', data: secondValues, backgroundColor: SERIES_2 }
+                        ].map(function (ds) {
+                            return Object.assign(ds, {
+                                borderRadius: 4,
+                                borderSkipped: 'start',
+                                maxBarThickness: 16,
+                                barPercentage: 0.9
+                            });
+                        })
+                    },
+                    options: {
+                        indexAxis: 'y',
+                        maintainAspectRatio: false,
+                        interaction: { mode: 'index', axis: 'y', intersect: false },
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                                align: 'start',
+                                labels: { boxWidth: 12, boxHeight: 12, useBorderRadius: true, borderRadius: 2 }
+                            },
+                            tooltip: { displayColors: true }
+                        },
+                        scales: { x: countAxis(), y: categoryAxis() }
+                    }
+                });
+            }
+        })();
+    </script>
+}

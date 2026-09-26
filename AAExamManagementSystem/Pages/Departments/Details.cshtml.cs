@@ -20,7 +20,7 @@ public class DetailsModel : PageModel
 
     public DepartmentDto Department { get; set; } = new();
 
-    public async Task<IActionResult> OnGetAsync(int id)
+    public async Task<IActionResult> OnGetAsync(string id)
     {
         var department = await _repository.GetByIdAsync(id);
         if (department is null)

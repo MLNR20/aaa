@@ -28,8 +28,8 @@ public class DepartmentsController : ControllerBase
         return Ok(_mapper.Map<IEnumerable<DepartmentDto>>(departments));
     }
 
-    [HttpGet("{id:int}")]
-    public async Task<ActionResult<DepartmentDto>> GetById(int id)
+    [HttpGet("{id}")]
+    public async Task<ActionResult<DepartmentDto>> GetById(string id)
     {
         var department = await _repository.GetByIdAsync(id);
         if (department is null) return NotFound();
@@ -45,8 +45,8 @@ public class DepartmentsController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id = department.Id, version = "1.0" }, _mapper.Map<DepartmentDto>(department));
     }
 
-    [HttpPut("{id:int}")]
-    public async Task<IActionResult> Update(int id, DepartmentCreateUpdateDto dto)
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(string id, DepartmentCreateUpdateDto dto)
     {
         var department = await _repository.GetByIdAsync(id);
         if (department is null) return NotFound();
@@ -58,13 +58,14 @@ public class DepartmentsController : ControllerBase
         return NoContent();
     }
 
-    [HttpDelete("{id:int}")]
-    public async Task<IActionResult> Delete(int id)
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(string id)
     {
         var department = await _repository.GetByIdAsync(id);
         if (department is null) return NotFound();
 
-        _repository.Remove(department);
+        department.IsActive = false;
+        _repository.Update(department);
         await _repository.SaveChangesAsync();
         return NoContent();
     }

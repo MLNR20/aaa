@@ -1,0 +1,23 @@
+@page "{id}"
+@model AAExamManagementSystem.Pages.Users.DetailsModel
+@{
+    ViewData["Title"] = "User Details";
+}
+
+@await Component.InvokeAsync("DetailsCard", new
+{
+    title = "User Details",
+    fields = new[]
+    {
+        new DetailsField("Id", Model.TargetUser.Id),
+        new DetailsField("Username", Model.TargetUser.UserName),
+        new DetailsField("Email", Model.TargetUser.Email),
+        new DetailsField("First Name", Model.TargetUser.FirstName),
+        new DetailsField("Last Name", Model.TargetUser.LastName),
+        new DetailsField("Role", Model.TargetUser.Role)
+    },
+    showStatus = true,
+    isActive = Model.TargetUser.IsActive,
+    editHref = $"/Users/Edit/{Model.TargetUser.Id}",
+    backHref = "/Users"
+})

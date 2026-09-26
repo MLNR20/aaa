@@ -1,8 +1,8 @@
 @model AAExamManagementSystem.ViewComponents.EntityTableViewModel
 
-<div class="card border rounded-2 p-3">
-    <div class="card-header bg-white border-bottom-0 d-flex justify-content-between align-items-center">
-        <h5 class="mb-0 @Model.TitleClass">
+<div class="card border rounded-2 p-4">
+    <div class="card-header bg-white border-bottom-0">
+        <h5 class="mb-0 entity-table-title @Model.TitleClass">
             @if (!string.IsNullOrEmpty(Model.Icon))
             {
                 <i class="bi @Model.Icon" aria-hidden="true"></i>
@@ -11,25 +11,26 @@
         </h5>
         @if (!string.IsNullOrEmpty(Model.AddButtonText))
         {
-            @if (!string.IsNullOrEmpty(Model.AddButtonModalTarget))
-            {
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="@Model.AddButtonModalTarget">@Model.AddButtonText</button>
-            }
-            else if (!string.IsNullOrEmpty(Model.AddButtonHref))
-            {
-                <a href="@Model.AddButtonHref" class="btn btn-primary">@Model.AddButtonText</a>
-            }
+            <div class="mt-4 d-flex align-items-center">
+                @if (!string.IsNullOrEmpty(Model.AddButtonModalTarget))
+                {
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="@Model.AddButtonModalTarget">@Model.AddButtonText</button>
+                }
+                else if (!string.IsNullOrEmpty(Model.AddButtonHref))
+                {
+                    <a href="@Model.AddButtonHref" class="btn btn-primary">@Model.AddButtonText</a>
+                }
+            </div>
         }
     </div>
     <div class="card-body">
         @if (Model.Items.Count == 0)
         {
-            <p class="text-muted mb-0">@Model.EmptyMessage</p>
+            <span class="badge rounded-pill text-bg-primary fs-6 fw-semibold px-3 py-2">@Model.EmptyMessage</span>
         }
         else
         {
-            <div class="table-responsive">
-                <table id="@Model.TableId" class="table table-striped table-hover align-middle w-100">
+            <table id="@Model.TableId" class="table table-striped table-hover align-middle w-100">
                     <thead>
                         <tr>
                             <th class="text-start">Name</th>
@@ -60,7 +61,20 @@
                                 <td class="text-start">
                                     <a href="@Model.BasePath/Details/@item.Id" class="btn btn-secondary">Details</a>
                                     <a href="@Model.BasePath/Edit/@item.Id" class="btn btn-primary">Edit</a>
-                                    @if (Model.ConfirmDeleteWithSweetAlert)
+                                    @if (Model.UseSoftDelete)
+                                    {
+                                        var isActive = item.IsActive ?? true;
+                                        var actionName = isActive ? "Deactivate" : "Activate";
+                                        var btnClass = isActive ? "btn-danger" : "btn-success";
+                                        <form method="post" action="@Model.BasePath?handler=@actionName" class="d-inline js-sweetalert-delete-form" data-action="@actionName.ToLowerInvariant()">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="id" value="@item.Id" />
+                                            <button type="submit" class="btn @btnClass js-sweetalert-delete" data-name="@item.Name">
+                                                @actionName
+                                            </button>
+                                        </form>
+                                    }
+                                    else if (Model.ConfirmDeleteWithSweetAlert)
                                     {
                                         <form method="post" action="@Model.BasePath?handler=Delete" class="d-inline js-sweetalert-delete-form">
                                             @Html.AntiForgeryToken()
@@ -79,7 +93,88 @@
                         }
                     </tbody>
                 </table>
-            </div>
         }
     </div>
 </div>
+
+@if (Model.ConfirmCreateWithSweetAlert)
+{
+    var entityLabel = (string.IsNullOrEmpty(Model.EntityName) ? Model.Title : Model.EntityName).ToLowerInvariant();
+    var createTitleJson = System.Text.Json.JsonSerializer.Serialize($"Create new {entityLabel}?");
+    var createTextJson = System.Text.Json.JsonSerializer.Serialize($"Please confirm you want to create this {entityLabel}.");
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.js-sweetalert-create-form').forEach(function (form) {
+                form.addEventListener('submit', function (e) {
+                    if (typeof Swal === 'undefined' || form.dataset.confirmed === 'true') {
+                        return;
+                    }
+
+                    var isValid = true;
+                    if (window.jQuery && typeof window.jQuery(form).valid === 'function') {
+                        isValid = window.jQuery(form).valid();
+                    } else if (typeof form.reportValidity === 'function') {
+                        isValid = form.reportValidity();
+                    }
+                    if (!isValid) {
+                        return;
+                    }
+
+                    e.preventDefault();
+                    Swal.fire({
+                        title: @Html.Raw(createTitleJson),
+                        text: @Html.Raw(createTextJson),
+                        icon: 'question',
+                        showCancelButton: true,
+                        confirmButtonText: 'Create',
+                        confirmButtonColor: '#0d6efd',
+                        cancelButtonText: 'Cancel'
+                    }).then(function (result) {
+                        if (result.isConfirmed) {
+                            form.dataset.confirmed = 'true';
+                            form.submit();
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+}
+
+@if (Model.UseSoftDelete && Model.ConfirmDeleteWithSweetAlert)
+{
+    var entityLabel = (string.IsNullOrEmpty(Model.EntityName) ? Model.Title : Model.EntityName).ToLowerInvariant();
+    var entityLabelJson = System.Text.Json.JsonSerializer.Serialize(entityLabel);
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var entityLabel = @Html.Raw(entityLabelJson);
+            document.querySelectorAll('.js-sweetalert-delete-form').forEach(function (form) {
+                form.addEventListener('submit', function (e) {
+                    if (typeof Swal === 'undefined' || form.dataset.confirmed === 'true') {
+                        return;
+                    }
+
+                    e.preventDefault();
+                    var name = form.querySelector('.js-sweetalert-delete').dataset.name;
+                    var action = form.dataset.action || 'update';
+                    var verb = action.charAt(0).toUpperCase() + action.slice(1);
+                    var isActivate = action === 'activate';
+                    Swal.fire({
+                        title: verb + ' ' + entityLabel + '?',
+                        text: 'Are you sure you want to ' + action + ' "' + name + '"?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: verb,
+                        confirmButtonColor: isActivate ? '#198754' : '#dc3545',
+                        cancelButtonText: 'Cancel'
+                    }).then(function (result) {
+                        if (result.isConfirmed) {
+                            form.dataset.confirmed = 'true';
+                            form.submit();
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+}

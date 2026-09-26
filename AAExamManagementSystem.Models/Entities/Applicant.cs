@@ -20,6 +20,9 @@ public class Applicant
     public DateTime DateUpdated { get; set; } = DateTime.UtcNow;
     public bool IsActive { get; set; } = true;
 
+    public string UserId { get; set; } = string.Empty;
+    public ApplicationUser? User { get; set; }
+
     public ICollection<Attempt> Attempts { get; set; } = new List<Attempt>();
     public ICollection<Answer> Answers { get; set; } = new List<Answer>();
 }

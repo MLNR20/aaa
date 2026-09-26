@@ -47,7 +47,7 @@ public class IndexModel : PageModel
         return RedirectToPage("Index");
     }
 
-    public async Task<IActionResult> OnPostDeleteAsync(int id)
+    public async Task<IActionResult> OnPostDeactivateAsync(int id)
     {
         var course = await _repository.GetByIdAsync(id);
         if (course is null)
@@ -55,10 +55,27 @@ public class IndexModel : PageModel
             return NotFound();
         }
 
-        _repository.Remove(course);
+        course.IsActive = false;
+        _repository.Update(course);
         await _repository.SaveChangesAsync();
 
-        TempData["SuccessMessage"] = $"Course '{course.Name}' deleted successfully.";
+        TempData["SuccessMessage"] = $"Course '{course.Name}' deactivated successfully.";
+        return RedirectToPage("Index");
+    }
+
+    public async Task<IActionResult> OnPostActivateAsync(int id)
+    {
+        var course = await _repository.GetByIdAsync(id);
+        if (course is null)
+        {
+            return NotFound();
+        }
+
+        course.IsActive = true;
+        _repository.Update(course);
+        await _repository.SaveChangesAsync();
+
+        TempData["SuccessMessage"] = $"Course '{course.Name}' activated successfully.";
         return RedirectToPage("Index");
     }
 

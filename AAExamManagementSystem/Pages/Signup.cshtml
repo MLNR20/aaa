@@ -1,0 +1,139 @@
+@page
+@model SignupModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Applicant Registration - Exam Management System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap-icons/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body class="bg-light">
+    <main class="login-page d-flex align-items-center justify-content-center min-vh-100 p-3">
+        <div class="card login-card signup-card border-0 shadow-sm w-100">
+            <div class="card-body p-4 p-md-5">
+                <div class="text-center mb-4">
+                    <div class="login-logo mx-auto mb-3">
+                        <i class="bi bi-person-plus" aria-hidden="true"></i>
+                    </div>
+                    <h1 class="h4 fw-bold mb-1">Applicant Registration</h1>
+                    <p class="text-muted mb-0">Create your account and submit your application</p>
+                </div>
+
+                <form method="post" novalidate>
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2" role="alert"></div>
+
+                    <h2 class="h6 text-uppercase text-muted fw-semibold mb-3">Account Information</h2>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Input.UserName" class="form-label fw-semibold"></label>
+                            <input asp-for="Input.UserName" class="form-control" autocomplete="username" autofocus />
+                            <span asp-validation-for="Input.UserName" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Input.Email" class="form-label fw-semibold"></label>
+                            <input asp-for="Input.Email" class="form-control" autocomplete="email" />
+                            <span asp-validation-for="Input.Email" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Input.Password" class="form-label fw-semibold"></label>
+                            <input asp-for="Input.Password" class="form-control" autocomplete="new-password" />
+                            <span asp-validation-for="Input.Password" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Input.ConfirmPassword" class="form-label fw-semibold"></label>
+                            <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" />
+                            <span asp-validation-for="Input.ConfirmPassword" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <h2 class="h6 text-uppercase text-muted fw-semibold mb-3 mt-2">Applicant Information</h2>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Input.StudentNo" class="form-label fw-semibold"></label>
+                            <input asp-for="Input.StudentNo" class="form-control" />
+                            <span asp-validation-for="Input.StudentNo" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Input.AcademicYear" class="form-label fw-semibold"></label>
+                            <input asp-for="Input.AcademicYear" class="form-control" placeholder="e.g. 2026-2027" />
+                            <span asp-validation-for="Input.AcademicYear" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Input.FirstName" class="form-label fw-semibold"></label>
+                            <input asp-for="Input.FirstName" class="form-control" />
+                            <span asp-validation-for="Input.FirstName" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Input.LastName" class="form-label fw-semibold"></label>
+                            <input asp-for="Input.LastName" class="form-control" />
+                            <span asp-validation-for="Input.LastName" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Input.YearLevel" class="form-label fw-semibold"></label>
+                            <input asp-for="Input.YearLevel" class="form-control" />
+                            <span asp-validation-for="Input.YearLevel" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Input.School" class="form-label fw-semibold"></label>
+                            <input asp-for="Input.School" class="form-control" />
+                            <span asp-validation-for="Input.School" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Input.FirstChoice" class="form-label fw-semibold"></label>
+                            <input asp-for="Input.FirstChoice" class="form-control" />
+                            <span asp-validation-for="Input.FirstChoice" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Input.SecondChoice" class="form-label fw-semibold"></label>
+                            <input asp-for="Input.SecondChoice" class="form-control" />
+                            <span asp-validation-for="Input.SecondChoice" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Input.ExpectedGradDate" class="form-label fw-semibold"></label>
+                            <input asp-for="Input.ExpectedGradDate" class="form-control" />
+                            <span asp-validation-for="Input.ExpectedGradDate" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Input.TermsRemaining" class="form-label fw-semibold"></label>
+                            <input asp-for="Input.TermsRemaining" class="form-control" type="number" min="0" />
+                            <span asp-validation-for="Input.TermsRemaining" class="text-danger small"></span>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label asp-for="Input.Resume" class="form-label fw-semibold"></label>
+                            <input asp-for="Input.Resume" class="form-control" placeholder="Link to your resume (optional)" />
+                            <span asp-validation-for="Input.Resume" class="text-danger small"></span>
+                        </div>
+                        <div class="col-12 mb-4">
+                            <div class="form-check">
+                                <input asp-for="Input.IsScholar" class="form-check-input" />
+                                <label asp-for="Input.IsScholar" class="form-check-label"></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold">
+                        <i class="bi bi-send-check me-1" aria-hidden="true"></i> Submit Application
+                    </button>
+
+                    <p class="text-center text-muted small mt-3 mb-0">
+                        Already have an account? <a asp-page="/Login">Login</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+</body>
+</html>

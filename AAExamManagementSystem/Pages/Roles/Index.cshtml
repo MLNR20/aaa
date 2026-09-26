@@ -14,13 +14,16 @@
     addButtonText = "New Role",
     addButtonModalTarget = "#createRoleModal",
     showStatusColumn = true,
-    confirmDeleteWithSweetAlert = true
+    confirmDeleteWithSweetAlert = true,
+    confirmCreateWithSweetAlert = true,
+    entityName = "Role",
+    useSoftDelete = true
 })
 
 <div class="modal fade" id="createRoleModal" tabindex="-1" aria-labelledby="createRoleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form method="post" asp-page-handler="Create">
+            <form method="post" asp-page-handler="Create" class="js-sweetalert-create-form">
                 <div class="modal-header">
                     <h5 class="modal-title" id="createRoleModalLabel">New Role</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -60,32 +63,12 @@
     <script>
         $(function () {
             if ($('#rolesTable').length) {
-                $('#rolesTable').DataTable();
+                initEntityTable('rolesTable');
             }
             @if (Model.ShowCreateModal)
             {
                 <text>new bootstrap.Modal(document.getElementById('createRoleModal')).show();</text>
             }
-
-            document.querySelectorAll('.js-sweetalert-delete-form').forEach(function (form) {
-                form.addEventListener('submit', function (e) {
-                    e.preventDefault();
-                    var name = form.querySelector('.js-sweetalert-delete').dataset.name;
-                    Swal.fire({
-                        title: 'Delete role?',
-                        text: 'Are you sure you want to delete "' + name + '"? This action cannot be undone.',
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonText: 'Delete',
-                        confirmButtonColor: '#dc3545',
-                        cancelButtonText: 'Cancel'
-                    }).then(function (result) {
-                        if (result.isConfirmed) {
-                            form.submit();
-                        }
-                    });
-                });
-            });
         });
     </script>
 }

@@ -4,5 +4,53 @@
     ViewData["Title"] = "Users";
 }
 
-<h1>Users</h1>
-<p class="text-muted">User management is not implemented yet.</p>
+@await Component.InvokeAsync("EntityTable", new
+{
+    tableId = "usersTable",
+    basePath = "/Users",
+    emptyMessage = "No users found.",
+    items = Model.Users.Select(u => new EntityTableRow(u.Id, $"{u.FullName} ({u.Role})", u.IsActive)),
+    title = "Users",
+    showStatusColumn = true,
+    confirmDeleteWithSweetAlert = true,
+    entityName = "User"
+})
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap5.min.css" />
+}
+
+@section Scripts {
+    <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script src="~/js/sweetalert-toast.js" asp-append-version="true"></script>
+    <partial name="_SuccessToast" />
+    <script>
+        $(function () {
+            if ($('#usersTable').length) {
+                initEntityTable('usersTable');
+            }
+
+            document.querySelectorAll('.js-sweetalert-delete-form').forEach(function (form) {
+                form.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    var name = form.querySelector('.js-sweetalert-delete').dataset.name;
+                    Swal.fire({
+                        title: 'Delete user?',
+                        text: 'Are you sure you want to delete "' + name + '"? This action cannot be undone.',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Delete',
+                        confirmButtonColor: '#dc3545',
+                        cancelButtonText: 'Cancel'
+                    }).then(function (result) {
+                        if (result.isConfirmed) {
+                            form.submit();
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+}

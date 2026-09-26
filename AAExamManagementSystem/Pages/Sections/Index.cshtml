@@ -9,18 +9,22 @@
     tableId = "sectionsTable",
     basePath = "/Sections",
     emptyMessage = "No sections found.",
-    items = Model.Sections.Select(s => new EntityTableRow(s.Id.ToString(), s.Name)),
+    items = Model.Sections.Select(s => new EntityTableRow(s.Id.ToString(), s.Name, s.IsActive, s.DateCreated)),
     title = "Sections",
     addButtonText = "New Section",
     addButtonModalTarget = "#createSectionModal",
-    showStatusColumn = false,
-    confirmDeleteWithSweetAlert = true
+    showStatusColumn = true,
+    showDateCreatedColumn = true,
+    confirmDeleteWithSweetAlert = true,
+    confirmCreateWithSweetAlert = true,
+    entityName = "Section",
+    useSoftDelete = true
 })
 
 <div class="modal fade" id="createSectionModal" tabindex="-1" aria-labelledby="createSectionModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form method="post" asp-page-handler="Create">
+            <form method="post" asp-page-handler="Create" class="js-sweetalert-create-form">
                 <div class="modal-header">
                     <h5 class="modal-title" id="createSectionModalLabel">New Section</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -54,7 +58,7 @@
     <script>
         $(function () {
             if ($('#sectionsTable').length) {
-                $('#sectionsTable').DataTable();
+                initEntityTable('sectionsTable');
             }
             @if (Model.ShowCreateModal)
             {
@@ -75,26 +79,6 @@
                 });
                 </text>
             }
-
-            document.querySelectorAll('.js-sweetalert-delete-form').forEach(function (form) {
-                form.addEventListener('submit', function (e) {
-                    e.preventDefault();
-                    var name = form.querySelector('.js-sweetalert-delete').dataset.name;
-                    Swal.fire({
-                        title: 'Delete section?',
-                        text: 'Are you sure you want to delete "' + name + '"? This action cannot be undone.',
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonText: 'Delete',
-                        confirmButtonColor: '#dc3545',
-                        cancelButtonText: 'Cancel'
-                    }).then(function (result) {
-                        if (result.isConfirmed) {
-                            form.submit();
-                        }
-                    });
-                });
-            });
         });
     </script>
 }

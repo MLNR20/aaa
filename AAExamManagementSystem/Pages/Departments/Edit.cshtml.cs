@@ -19,7 +19,7 @@ public class EditModel : PageModel
     }
 
     [BindProperty(SupportsGet = true)]
-    public int Id { get; set; }
+    public string Id { get; set; } = string.Empty;
 
     [BindProperty]
     public DepartmentCreateUpdateDto Department { get; set; } = new();

@@ -73,7 +73,8 @@ public class RolesController : ControllerBase
         var role = await _roleManager.FindByIdAsync(id);
         if (role is null) return NotFound();
 
-        var result = await _roleManager.DeleteAsync(role);
+        role.IsActive = false;
+        var result = await _roleManager.UpdateAsync(role);
         if (!result.Succeeded) return BadRequest(result.Errors);
 
         return NoContent();

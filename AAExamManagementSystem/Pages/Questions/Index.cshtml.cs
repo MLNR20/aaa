@@ -1,6 +1,7 @@
 using AAExamManagementSystem.Models.Dtos;
 using AAExamManagementSystem.Models.Entities;
 using AAExamManagementSystem.Repository;
+using AAExamManagementSystem.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -13,17 +14,20 @@ public class IndexModel : PageModel
     private readonly IGenericRepository<Question> _repository;
     private readonly IGenericRepository<QuestionType> _questionTypeRepository;
     private readonly IGenericRepository<Section> _sectionRepository;
+    private readonly QuestionChoiceService _choiceService;
     private readonly IMapper _mapper;
 
     public IndexModel(
         IGenericRepository<Question> repository,
         IGenericRepository<QuestionType> questionTypeRepository,
         IGenericRepository<Section> sectionRepository,
+        QuestionChoiceService choiceService,
         IMapper mapper)
     {
         _repository = repository;
         _questionTypeRepository = questionTypeRepository;
         _sectionRepository = sectionRepository;
+        _choiceService = choiceService;
         _mapper = mapper;
     }
 
@@ -35,6 +39,8 @@ public class IndexModel : PageModel
     [BindProperty]
     public QuestionCreateUpdateDto NewQuestion { get; set; } = new();
 
+    public IList<int> ChoiceTypeIds { get; set; } = new List<int>();
+
     public bool ShowCreateModal { get; set; }
 
     public async Task OnGetAsync()
@@ -45,6 +51,7 @@ public class IndexModel : PageModel
 
     public async Task<IActionResult> OnPostCreateAsync()
     {
+        await _choiceService.NormalizeAndValidateAsync(NewQuestion, ModelState, nameof(NewQuestion));
         if (!ModelState.IsValid)
         {
             await LoadQuestionsAsync();
@@ -55,13 +62,14 @@ public class IndexModel : PageModel
 
         var question = _mapper.Map<Question>(NewQuestion);
         await _repository.AddAsync(question);
+        await _choiceService.ReplaceChoicesAsync(question, NewQuestion.Choices);
         await _repository.SaveChangesAsync();
 
         TempData["SuccessMessage"] = "Question created successfully.";
         return RedirectToPage("Index");
     }
 
-    public async Task<IActionResult> OnPostDeleteAsync(int id)
+    public async Task<IActionResult> OnPostDeleteAsync(Guid id)
     {
         var question = await _repository.GetByIdAsync(id);
         if (question is null)
@@ -69,6 +77,7 @@ public class IndexModel : PageModel
             return NotFound();
         }
 
+        await _choiceService.RemoveChoicesAsync(question.Id);
         _repository.Remove(question);
         await _repository.SaveChangesAsync();
 
@@ -98,5 +107,6 @@ public class IndexModel : PageModel
         var sections = await _sectionRepository.GetAllAsync();
         QuestionTypeOptions = new SelectList(questionTypes.OrderBy(qt => qt.Name), "Id", "Name");
         SectionOptions = new SelectList(sections.OrderBy(s => s.Name), "Id", "Name");
+        ChoiceTypeIds = await _choiceService.GetChoiceTypeIdsAsync();
     }
 }

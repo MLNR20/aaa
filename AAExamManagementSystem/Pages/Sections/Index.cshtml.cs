@@ -47,7 +47,7 @@ public class IndexModel : PageModel
         return RedirectToPage("Index");
     }
 
-    public async Task<IActionResult> OnPostDeleteAsync(int id)
+    public async Task<IActionResult> OnPostDeactivateAsync(int id)
     {
         var section = await _repository.GetByIdAsync(id);
         if (section is null)
@@ -55,10 +55,27 @@ public class IndexModel : PageModel
             return NotFound();
         }
 
-        _repository.Remove(section);
+        section.IsActive = false;
+        _repository.Update(section);
         await _repository.SaveChangesAsync();
 
-        TempData["SuccessMessage"] = $"Section '{section.Name}' deleted successfully.";
+        TempData["SuccessMessage"] = $"Section '{section.Name}' deactivated successfully.";
+        return RedirectToPage("Index");
+    }
+
+    public async Task<IActionResult> OnPostActivateAsync(int id)
+    {
+        var section = await _repository.GetByIdAsync(id);
+        if (section is null)
+        {
+            return NotFound();
+        }
+
+        section.IsActive = true;
+        _repository.Update(section);
+        await _repository.SaveChangesAsync();
+
+        TempData["SuccessMessage"] = $"Section '{section.Name}' activated successfully.";
         return RedirectToPage("Index");
     }
 

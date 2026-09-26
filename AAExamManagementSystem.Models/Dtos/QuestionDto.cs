@@ -4,7 +4,7 @@ namespace AAExamManagementSystem.Models.Dtos;
 
 public class QuestionDto
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
     public int QuestionTypeId { get; set; }
     public string QuestionTypeName { get; set; } = string.Empty;
     public int SectionId { get; set; }
@@ -14,6 +14,7 @@ public class QuestionDto
     public int Score { get; set; }
     public bool IsUpToEvaluation { get; set; }
     public bool IsActive { get; set; } = true;
+    public IList<ChoiceDto> Choices { get; set; } = new List<ChoiceDto>();
 }
 
 public class QuestionCreateUpdateDto
@@ -41,4 +42,6 @@ public class QuestionCreateUpdateDto
 
     [Display(Name = "Active")]
     public bool IsActive { get; set; } = true;
+
+    public List<ChoiceCreateUpdateDto> Choices { get; set; } = new();
 }

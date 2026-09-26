@@ -2,6 +2,10 @@ html {
   font-size: 14px;
 }
 
+.p-6 {
+  padding: 4rem !important;
+}
+
 @media (min-width: 768px) {
   html {
     font-size: 16px;
@@ -78,6 +82,25 @@ html {
 .dataTables_wrapper .dataTables_paginate {
   font-size: 1rem;
 }
+
+.card-header h5.entity-table-title {
+  font-size: 1.45rem;
+}
+
+.dataTables_wrapper .dataTables_filter input,
+.dataTables_wrapper .dataTables_length select {
+  font-size: 1.12rem;
+}
+
+.dataTables_wrapper .dataTables_info,
+.dataTables_wrapper .dataTables_paginate .page-link {
+  font-size: 1.12rem;
+}
+
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dataTables_filter {
+  font-size: 1.12rem;
+}
 /* Login page */
 .login-card {
   max-width: 420px;
@@ -94,4 +117,76 @@ html {
   background-color: #1b6ec2;
   color: #fff;
   font-size: 1.75rem;
+}
+
+.signup-card {
+  max-width: 720px;
+}
+
+/* Analytics page */
+.stat-tile,
+.chart-card {
+  border: 1px solid #e9e8e4;
+  border-radius: 1rem;
+  font-family: 'Manrope', sans-serif;
+}
+
+.stat-label {
+  color: #52514e;
+  font-size: .875rem;
+  font-weight: 600;
+}
+
+.stat-label i {
+  margin-right: .35rem;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-top: .25rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-meta {
+  color: #6c757d;
+  font-size: .8125rem;
+}
+
+.chart-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: .125rem;
+}
+
+.chart-subtitle {
+  color: #6c757d;
+  font-size: .8125rem;
+  margin-bottom: 1rem;
+}
+
+.chart-box {
+  position: relative;
+  height: 260px;
+}
+
+.chart-box-tall {
+  height: 320px;
+}
+
+.chart-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 160px;
+  margin: 0;
+  color: #6c757d;
+  background: #f8f9fa;
+  border-radius: .75rem;
+  font-size: .875rem;
+}
+
+.analytics-table > :not(caption) > * > * {
+  padding: .75rem;
 }

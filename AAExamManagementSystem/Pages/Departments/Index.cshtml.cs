@@ -47,7 +47,7 @@ public class IndexModel : PageModel
         return RedirectToPage("Index");
     }
 
-    public async Task<IActionResult> OnPostDeleteAsync(int id)
+    public async Task<IActionResult> OnPostDeactivateAsync(string id)
     {
         var department = await _repository.GetByIdAsync(id);
         if (department is null)
@@ -55,10 +55,27 @@ public class IndexModel : PageModel
             return NotFound();
         }
 
-        _repository.Remove(department);
+        department.IsActive = false;
+        _repository.Update(department);
         await _repository.SaveChangesAsync();
 
-        TempData["SuccessMessage"] = $"Department '{department.Name}' deleted successfully.";
+        TempData["SuccessMessage"] = $"Department '{department.Name}' deactivated successfully.";
+        return RedirectToPage("Index");
+    }
+
+    public async Task<IActionResult> OnPostActivateAsync(string id)
+    {
+        var department = await _repository.GetByIdAsync(id);
+        if (department is null)
+        {
+            return NotFound();
+        }
+
+        department.IsActive = true;
+        _repository.Update(department);
+        await _repository.SaveChangesAsync();
+
+        TempData["SuccessMessage"] = $"Department '{department.Name}' activated successfully.";
         return RedirectToPage("Index");
     }
 

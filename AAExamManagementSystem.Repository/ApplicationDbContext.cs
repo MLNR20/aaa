@@ -91,5 +91,15 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
             .WithMany(ap => ap.Attempts)
             .HasForeignKey(a => a.ApplicantId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<Applicant>()
+            .HasOne(a => a.User)
+            .WithOne(u => u.Applicant)
+            .HasForeignKey<Applicant>(a => a.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<Applicant>()
+            .HasIndex(a => a.UserId)
+            .IsUnique();
     }
 }

@@ -1,0 +1,58 @@
+@model AAExamManagementSystem.Pages.Questions.ChoicesEditorModel
+@{
+    var selectId = $"{Model.Prefix}_QuestionTypeId";
+    // Radios only group the rows; the bound value is the hidden IsCorrect input kept in sync by question-choices.js.
+    var radioGroup = $"{Model.Prefix}_CorrectChoice";
+}
+
+<div class="js-choices-editor mb-3 p-3 border rounded bg-light"
+     data-prefix="@Model.Prefix"
+     data-type-select="#@selectId"
+     data-choice-type-ids="@string.Join(",", Model.ChoiceTypeIds)"
+     hidden>
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <label class="form-label mb-0 fw-semibold">Choices</label>
+        <small class="text-muted">Select the one correct answer.</small>
+    </div>
+
+    <div class="js-choices-list">
+        @for (var i = 0; i < Model.Choices.Count; i++)
+        {
+            var choice = Model.Choices[i];
+            <div class="input-group mb-2 js-choice-row">
+                <span class="input-group-text js-choice-letter">@((char)('A' + i))</span>
+                <div class="input-group-text">
+                    <input class="form-check-input mt-0 js-correct-radio" type="radio" name="@radioGroup" title="Correct answer"
+                           @(choice.IsCorrect ? "checked" : "") />
+                    <input type="hidden" class="js-correct-value" name="@(Model.Prefix).Choices[@i].IsCorrect"
+                           value="@(choice.IsCorrect ? "true" : "false")" />
+                </div>
+                <input type="text" class="form-control" maxlength="500" placeholder="Choice text"
+                       name="@(Model.Prefix).Choices[@i].ChoiceText" value="@choice.ChoiceText" />
+                <button type="button" class="btn btn-outline-danger js-remove-choice" title="Remove choice">
+                    <i class="bi bi-x-lg" aria-hidden="true"></i>
+                </button>
+            </div>
+        }
+    </div>
+
+    <template class="js-choice-template">
+        <div class="input-group mb-2 js-choice-row">
+            <span class="input-group-text js-choice-letter"></span>
+            <div class="input-group-text">
+                <input class="form-check-input mt-0 js-correct-radio" type="radio" name="@radioGroup" title="Correct answer" />
+                <input type="hidden" class="js-correct-value" name="@(Model.Prefix).Choices[__index__].IsCorrect" value="false" />
+            </div>
+            <input type="text" class="form-control" maxlength="500" placeholder="Choice text"
+                   name="@(Model.Prefix).Choices[__index__].ChoiceText" />
+            <button type="button" class="btn btn-outline-danger js-remove-choice" title="Remove choice">
+                <i class="bi bi-x-lg" aria-hidden="true"></i>
+            </button>
+        </div>
+    </template>
+
+    <button type="button" class="btn btn-outline-primary btn-sm js-add-choice">
+        <i class="bi bi-plus-lg" aria-hidden="true"></i> Add Choice
+    </button>
+    <div>@Html.ValidationMessage($"{Model.Prefix}.Choices", null, new { @class = "text-danger" })</div>
+</div>

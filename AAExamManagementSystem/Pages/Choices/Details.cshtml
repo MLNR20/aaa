@@ -1,0 +1,23 @@
+@page "{id:guid}"
+@model AAExamManagementSystem.Pages.Choices.DetailsModel
+@{
+    ViewData["Title"] = "Choice Details";
+
+    var fields = new List<DetailsField>
+    {
+        new("Id", Model.Choice.Id.ToString()),
+        new("Choice Text", Model.Choice.ChoiceText),
+        new("Correct Answer", Model.Choice.IsCorrect ? "Yes" : "No")
+    };
+}
+
+@await Component.InvokeAsync("DetailsCard", new
+{
+    title = "Choice Details",
+    fields,
+    showStatus = true,
+    isActive = Model.Choice.IsActive,
+    editHref = $"/Choices/Edit/{Model.Choice.Id}",
+    backHref = "/Choices",
+    columnClass = "col-md-6"
+})

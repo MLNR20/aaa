@@ -64,7 +64,8 @@ public class CoursesController : ControllerBase
         var course = await _repository.GetByIdAsync(id);
         if (course is null) return NotFound();
 
-        _repository.Remove(course);
+        course.IsActive = false;
+        _repository.Update(course);
         await _repository.SaveChangesAsync();
         return NoContent();
     }

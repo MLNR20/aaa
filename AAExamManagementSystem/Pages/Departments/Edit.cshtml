@@ -4,27 +4,27 @@
     ViewData["Title"] = "Edit Department";
 }
 
-<h1>Edit Department</h1>
-
-<div class="row">
-    <div class="col-md-4">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="mb-3">
-                <label asp-for="Department.Name" class="form-label"></label>
-                <input asp-for="Department.Name" class="form-control" />
-                <span asp-validation-for="Department.Name" class="text-danger"></span>
-            </div>
-            <div class="form-check form-switch mb-3">
-                <input asp-for="Department.IsActive" class="form-check-input" role="switch" />
-                <label asp-for="Department.IsActive" class="form-check-label"></label>
-            </div>
-            <button type="submit" class="btn btn-primary">Save</button>
-            <a asp-page="Index" class="btn btn-secondary">Cancel</a>
-        </form>
+<edit-card title="Edit Department">
+    <div class="row">
+        <div class="col-md-4">
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Id" />
+                <div class="mb-3">
+                    <label asp-for="Department.Name" class="form-label"></label>
+                    <input asp-for="Department.Name" class="form-control" />
+                    <span asp-validation-for="Department.Name" class="text-danger"></span>
+                </div>
+                <div class="form-check form-switch mb-3">
+                    <input asp-for="Department.IsActive" class="form-check-input" role="switch" />
+                    <label asp-for="Department.IsActive" class="form-check-label"></label>
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+                <a asp-page="Index" class="btn btn-secondary">Cancel</a>
+            </form>
+        </div>
     </div>
-</div>
+</edit-card>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

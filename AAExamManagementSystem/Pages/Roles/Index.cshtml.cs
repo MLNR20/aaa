@@ -63,7 +63,7 @@ public class IndexModel : PageModel
         return RedirectToPage("Index");
     }
 
-    public async Task<IActionResult> OnPostDeleteAsync(string id)
+    public async Task<IActionResult> OnPostDeactivateAsync(string id)
     {
         var role = await _roleManager.FindByIdAsync(id);
         if (role is null)
@@ -71,9 +71,27 @@ public class IndexModel : PageModel
             return NotFound();
         }
 
-        var result = await _roleManager.DeleteAsync(role);
+        role.IsActive = false;
+        var result = await _roleManager.UpdateAsync(role);
         TempData["SuccessMessage"] = result.Succeeded
-            ? $"Role '{role.Name}' deleted successfully."
+            ? $"Role '{role.Name}' deactivated successfully."
+            : string.Join(" ", result.Errors.Select(e => e.Description));
+
+        return RedirectToPage("Index");
+    }
+
+    public async Task<IActionResult> OnPostActivateAsync(string id)
+    {
+        var role = await _roleManager.FindByIdAsync(id);
+        if (role is null)
+        {
+            return NotFound();
+        }
+
+        role.IsActive = true;
+        var result = await _roleManager.UpdateAsync(role);
+        TempData["SuccessMessage"] = result.Succeeded
+            ? $"Role '{role.Name}' activated successfully."
             : string.Join(" ", result.Errors.Select(e => e.Description));
 
         return RedirectToPage("Index");

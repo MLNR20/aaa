@@ -15,13 +15,16 @@
     addButtonText = "New Course",
     addButtonModalTarget = "#createCourseModal",
     showStatusColumn = true,
-    confirmDeleteWithSweetAlert = true
+    confirmDeleteWithSweetAlert = true,
+    confirmCreateWithSweetAlert = true,
+    entityName = "Course",
+    useSoftDelete = true
 })
 
 <div class="modal fade" id="createCourseModal" tabindex="-1" aria-labelledby="createCourseModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form method="post" asp-page-handler="Create">
+            <form method="post" asp-page-handler="Create" class="js-sweetalert-create-form">
                 <div class="modal-header">
                     <h5 class="modal-title" id="createCourseModalLabel">New Course</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -66,32 +69,12 @@
     <script>
         $(function () {
             if ($('#coursesTable').length) {
-                $('#coursesTable').DataTable();
+                initEntityTable('coursesTable');
             }
             @if (Model.ShowCreateModal)
             {
                 <text>new bootstrap.Modal(document.getElementById('createCourseModal')).show();</text>
             }
-
-            document.querySelectorAll('.js-sweetalert-delete-form').forEach(function (form) {
-                form.addEventListener('submit', function (e) {
-                    e.preventDefault();
-                    var name = form.querySelector('.js-sweetalert-delete').dataset.name;
-                    Swal.fire({
-                        title: 'Delete course?',
-                        text: 'Are you sure you want to delete "' + name + '"? This action cannot be undone.',
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonText: 'Delete',
-                        confirmButtonColor: '#dc3545',
-                        cancelButtonText: 'Cancel'
-                    }).then(function (result) {
-                        if (result.isConfirmed) {
-                            form.submit();
-                        }
-                    });
-                });
-            });
         });
     </script>
 }

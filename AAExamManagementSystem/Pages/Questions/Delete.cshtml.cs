@@ -1,6 +1,7 @@
 using AAExamManagementSystem.Models.Dtos;
 using AAExamManagementSystem.Models.Entities;
 using AAExamManagementSystem.Repository;
+using AAExamManagementSystem.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -12,23 +13,26 @@ public class DeleteModel : PageModel
     private readonly IGenericRepository<Question> _repository;
     private readonly IGenericRepository<QuestionType> _questionTypeRepository;
     private readonly IGenericRepository<Section> _sectionRepository;
+    private readonly QuestionChoiceService _choiceService;
     private readonly IMapper _mapper;
 
     public DeleteModel(
         IGenericRepository<Question> repository,
         IGenericRepository<QuestionType> questionTypeRepository,
         IGenericRepository<Section> sectionRepository,
+        QuestionChoiceService choiceService,
         IMapper mapper)
     {
         _repository = repository;
         _questionTypeRepository = questionTypeRepository;
         _sectionRepository = sectionRepository;
+        _choiceService = choiceService;
         _mapper = mapper;
     }
 
     public QuestionDto Question { get; set; } = new();
 
-    public async Task<IActionResult> OnGetAsync(int id)
+    public async Task<IActionResult> OnGetAsync(Guid id)
     {
         var question = await _repository.GetByIdAsync(id);
         if (question is null)
@@ -44,7 +48,7 @@ public class DeleteModel : PageModel
         return Page();
     }
 
-    public async Task<IActionResult> OnPostAsync(int id)
+    public async Task<IActionResult> OnPostAsync(Guid id)
     {
         var question = await _repository.GetByIdAsync(id);
         if (question is null)
@@ -52,6 +56,7 @@ public class DeleteModel : PageModel
             return NotFound();
         }
 
+        await _choiceService.RemoveChoicesAsync(question.Id);
         _repository.Remove(question);
         await _repository.SaveChangesAsync();
 

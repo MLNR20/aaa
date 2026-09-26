@@ -6,7 +6,7 @@ public class Answer
     public int ApplicantId { get; set; }
     public Applicant Applicant { get; set; } = null!;
     public string? CheckedBy { get; set; }
-    public int QuestionId { get; set; }
+    public Guid QuestionId { get; set; }
     public Question Question { get; set; } = null!;
     public string AnswerText { get; set; } = string.Empty;
     public string? IsCorrect { get; set; }

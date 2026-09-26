@@ -63,7 +63,8 @@ public class SectionsController : ControllerBase
         var section = await _repository.GetByIdAsync(id);
         if (section is null) return NotFound();
 
-        _repository.Remove(section);
+        section.IsActive = false;
+        _repository.Update(section);
         await _repository.SaveChangesAsync();
         return NoContent();
     }

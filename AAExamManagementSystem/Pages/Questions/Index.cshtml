@@ -14,13 +14,15 @@
     addButtonText = "New Question",
     addButtonModalTarget = "#createQuestionModal",
     showStatusColumn = true,
-    confirmDeleteWithSweetAlert = true
+    confirmDeleteWithSweetAlert = true,
+    confirmCreateWithSweetAlert = true,
+    entityName = "Question"
 })
 
 <div class="modal fade" id="createQuestionModal" tabindex="-1" aria-labelledby="createQuestionModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <form method="post" asp-page-handler="Create">
+            <form method="post" asp-page-handler="Create" class="js-sweetalert-create-form">
                 <div class="modal-header">
                     <h5 class="modal-title" id="createQuestionModalLabel">New Question</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -34,6 +36,7 @@
                         </select>
                         <span asp-validation-for="NewQuestion.QuestionTypeId" class="text-danger"></span>
                     </div>
+                    <partial name="_ChoicesEditor" model="new ChoicesEditorModel(nameof(Model.NewQuestion), Model.NewQuestion.Choices, Model.ChoiceTypeIds)" />
                     <div class="mb-3">
                         <label asp-for="NewQuestion.SectionId" class="form-label"></label>
                         <select asp-for="NewQuestion.SectionId" class="form-select" asp-items="Model.SectionOptions">
@@ -80,13 +83,14 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/js/question-choices.js" asp-append-version="true"></script>
     <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
     <script>
         $(function () {
             if ($('#questionsTable').length) {
-                $('#questionsTable').DataTable();
+                initEntityTable('questionsTable');
             }
             @if (Model.ShowCreateModal)
             {

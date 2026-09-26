@@ -17,7 +17,10 @@ public record EntityTableViewModel(
     string? AddButtonHref,
     bool ShowStatusColumn,
     bool ShowDateCreatedColumn,
-    bool ConfirmDeleteWithSweetAlert);
+    bool ConfirmDeleteWithSweetAlert,
+    bool ConfirmCreateWithSweetAlert,
+    string? EntityName,
+    bool UseSoftDelete);
 
 public class EntityTableViewComponent : ViewComponent
 {
@@ -34,7 +37,10 @@ public class EntityTableViewComponent : ViewComponent
         string? addButtonHref = null,
         bool showStatusColumn = false,
         bool showDateCreatedColumn = false,
-        bool confirmDeleteWithSweetAlert = false)
+        bool confirmDeleteWithSweetAlert = false,
+        bool confirmCreateWithSweetAlert = false,
+        string? entityName = null,
+        bool useSoftDelete = false)
     {
         var model = new EntityTableViewModel(
             tableId,
@@ -49,7 +55,10 @@ public class EntityTableViewComponent : ViewComponent
             addButtonHref,
             showStatusColumn,
             showDateCreatedColumn,
-            confirmDeleteWithSweetAlert);
+            confirmDeleteWithSweetAlert,
+            confirmCreateWithSweetAlert,
+            entityName,
+            useSoftDelete);
 
         return View(model);
     }

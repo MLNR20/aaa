@@ -2,7 +2,7 @@ namespace AAExamManagementSystem.Models.Entities;
 
 public class Choice
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; } = Guid.NewGuid();
     public string ChoiceText { get; set; } = string.Empty;
     public bool IsCorrect { get; set; }
     public DateTime DateCreated { get; set; } = DateTime.UtcNow;
