@@ -38,6 +38,10 @@ html {
   transition: width 0.2s ease, min-width 0.2s ease;
 }
 
+.main-content {
+  min-width: 0;
+}
+
 #sidebar.sidebar.collapsed {
   width: 0;
   min-width: 0;

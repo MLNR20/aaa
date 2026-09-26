@@ -37,4 +37,7 @@ public class UserEditDto
 
     [Display(Name = "Section")]
     public int? SectionId { get; set; }
+
+    [Display(Name = "Roles")]
+    public List<string> SelectedRoles { get; set; } = new();
 }
